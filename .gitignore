@@ -14,3 +14,7 @@ node_modules/
 
 #ignore the netbeans folder
 nbproject/
+
+.settings/
+.idea/
+.*

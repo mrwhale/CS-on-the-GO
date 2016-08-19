@@ -164,11 +164,19 @@ function createUpcomingMenu(matches){
     menu.section(0, secUpcoming);
     for(i in matches){
       //console.log(matches[i].tournament);
-      x = new Date();
-      y = new Date(matches[i].timestamp);
-      z = x - y;
-      console.log(z);
-      menu.item(0, i, {title: matches[i].homeTeam + " vs " + matches[i].awayTeam, subtitle: matches[i].timestamp})
+      x = Date.now()
+      y = matches[i].timestamp * 1000;
+      z = y - x;
+    if (matches[i].homeNick !== "") {
+        homeName = matches[i].homeNick;
+        awayName = matches[i].awayNick;
+
+    } else {
+        homeName = matches[i].homeTeam;
+        awayName = matches[i].awayTeam;
+
+    }
+      menu.item(0, i, {title: homeName + " vs " + awayName, subtitle: millisToTime(z)})
     }
 }
 /*
@@ -205,7 +213,6 @@ function createCompletedMenu(matches){
 menu.on('select', function(e){
    console.log('click');
    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-   console.log(json.upcomingMatches[e.itemIndex].tournament);
    //create a new window for the more info to be displayed in
    var wind = new UI.Window({status: true});
    //create a text element to put the header in
@@ -221,15 +228,16 @@ menu.on('select', function(e){
    if(e.sectionIndex === 0){
        var array = 'upcomingMatches';
        textHeader.text(json.upcomingMatches[e.itemIndex].homeNick + ' vs ' + json.upcomingMatches[e.itemIndex].awayNick);
-
+        console.log(json.upcomingMatches[e.itemIndex].tournament);
    }
    else if(e.sectionIndex === 1){
        var array = 'liveMatches';
        textHeader.text(json.liveMatches[e.itemIndex].homeNick + ' vs ' + json.liveMatches[e.itemIndex].awayNick);
+        console.log(json.liveMatches[e.itemIndex].tournament);
 
    }else if(e.sectionIndex === 2){
        textHeader.text(json.completedMatches[e.itemIndex].homeNick + ' vs ' + json.completedMatches[e.itemIndex].awayNick);
-
+        console.log(json.completedMatches[e.itemIndex].tournament);
    }
    //card.body('test card');
    var line = new UI.Line({
@@ -254,3 +262,21 @@ menu.on('click', 'select', function(e) {
     card.body('the simplest window')
     card.show();
 });*/
+function millisToTime(ms) {
+    x = ms / 1000;
+    seconds = Math.floor(x % 60);
+    x /= 60;
+    minutes = Math.floor(x % 60);
+    x /= 60;
+    hours = Math.floor(x % 24);
+    x /= 24;
+    days = Math.floor(x);
+    if (days == "" && hours == "") {
+        return minutes + " Minutes, "  + seconds + " Seconds";
+    } else if (days == "") {
+        return  hours + " Hours, " + minutes + " Minutes";
+    } else {
+        return  days + " Days, " + hours + " Hours, " + minutes + " Minutes";
+    }
+
+}

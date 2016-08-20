@@ -1,99 +1,6 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
-/**
- * Welcome to Pebble.js!
- *
- * This is where you write your app.
- 
-var ajax = require('ajax');
-var UI = require('ui');
-var Vector2 = require('vector2');
 
-var main = new UI.Card({
-  title: 'Pebble.js',
-  icon: 'images/menu_icon.png',
-  subtitle: 'Hello World!',
-  body: 'Press any button.',
-  subtitleColor: 'indigo', // Named colors
-  bodyColor: '#9a0036' // Hex colors
-});
-ajax({url: 'www.google.com.au'},
-    function(data){
-      console.log(data);
-    });
-
-main.show();
-
-main.on('click', 'up', function(e) {
-  var menu = new UI.Menu({
-    sections: [{
-      items: [{
-        title: 'Pebble.js',
-        icon: 'images/menu_icon.png',
-        subtitle: 'Can do Menus'
-      }, {
-        title: 'Second Item',
-        subtitle: 'Subtitle Text'
-      }, {
-        title: 'Third Item',
-      }, {
-        title: 'Fourth Item',
-      }]
-    }]
-  });
-  menu.on('select', function(e) {
-    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-    console.log('The item is titled "' + e.item.title + '"');
-  });
-  menu.show();
-});
-
-main.on('click', 'select', function(e) {
-  var wind = new UI.Window({
-    backgroundColor: 'black'
-  });
-  var radial = new UI.Radial({
-    size: new Vector2(140, 140),
-    angle: 0,
-    angle2: 300,
-    radius: 20,
-    backgroundColor: 'cyan',
-    borderColor: 'celeste',
-    borderWidth: 1,
-  });
-  var textfield = new UI.Text({
-    size: new Vector2(140, 60),
-    font: 'gothic-24-bold',
-    text: 'Dynamic\nWindow',
-    textAlign: 'center'
-  });
-  var windSize = wind.size();
-  // Center the radial in the window
-  var radialPos = radial.position()
-      .addSelf(windSize)
-      .subSelf(radial.size())
-      .multiplyScalar(0.5);
-  radial.position(radialPos);
-  // Center the textfield in the window
-  var textfieldPos = textfield.position()
-      .addSelf(windSize)
-      .subSelf(textfield.size())
-      .multiplyScalar(0.5);
-  textfield.position(textfieldPos);
-  wind.add(radial);
-  wind.add(textfield);
-  wind.show();
-});
-
-main.on('click', 'down', function(e) {
-  var card = new UI.Card();
-  card.title('A Card');
-  card.subtitle('Is a Window');
-  card.body('The simplest window type in Pebble.js.');
-  card.show();
-});
-*/
-//var UI = require('ui');
 //todo display messages on errors when cant load etc
 // Hysuo65lk
 // 
@@ -108,6 +15,9 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
 });
 //Create a new UI
+//turns out you cant change font in a pebblejs menu list :( 
+// so sad
+
 var menu = new UI.Menu();
 getCSGO();
 
@@ -191,7 +101,6 @@ function createLiveMenu(matches){
     var secLive = { title: 'Live' };
     menu.section(1, secLive);
     for(i in matches){
-        console.log(i);
       //console.log(matches[i].tournament);
       menu.item(1, i, {title: matches[i].homeTeam + " vs " + matches[i].awayTeam})
     }
@@ -218,12 +127,35 @@ menu.on('select', function(e){
    console.log('click');
    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
    //create a new window for the more info to be displayed in
-   var wind = new UI.Window({status: true});
+   var wind = new UI.Window({
+     status: true,
+     scrollable: true
+     });
    //create a text element to put the header in
    //144 x 168
+   var textTourn = new UI.Text({
+     position: new Vector2(0,0),
+     size: new Vector2(144,20),
+     backgroundColor: 'White',
+     color: 'Black',
+     font: 'gothic-18',
+     textOverflow: 'wrap',
+     textAlign: 'center'
+   });
+/* Going to leave this out for now, maybe bring it in when i can somehow
+detect whta stage its in
+    var textStage = new UI.Text({
+     position: new Vector2(0,20),
+     size: new Vector2(144,15),
+     backgroundColor: 'White',
+     color: 'Black',
+     font: 'gothic-14',
+     textAlign: 'center'
+   }); */
+
    var textHome = new UI.Text({
-      position: new Vector2(0, 0),
-      size: new Vector2(71, 60),
+      position: new Vector2(0, 20),
+      size: new Vector2(71, 30),
       borderColor: 'white',
       backgroundColor: 'white',
       color: 'black',
@@ -232,43 +164,76 @@ menu.on('select', function(e){
     });
 
     var textAway = new UI.Text({
-      position: new Vector2(73, 0),
-      size: new Vector2(71, 60),
+      position: new Vector2(73, 20),
+      size: new Vector2(71, 30),
       borderColor: 'white',
       backgroundColor: 'white',
       color: 'black',
       font: 'gothic-14',
+      textOverflow: 'wrap',
+      textAlign: 'center'
+
+    });
+
+   var textHomeScore = new UI.Text({
+      position: new Vector2(0, 50),
+      size: new Vector2(71, 15),
+      borderColor: 'white',
+      backgroundColor: 'white',
+      color: 'black',
+      font: 'gothic-14-bold',
       textOverflow: 'wrap'
     });
 
+    var textAwayScore = new UI.Text({
+      position: new Vector2(73, 50),
+      size: new Vector2(71, 15),
+      borderColor: 'white',
+      backgroundColor: 'white',
+      color: 'black',
+      font: 'gothic-14-bold',
+      textOverflow: 'wrap',
+      textAlign: 'center'
+
+    });
+
     var textMap = new UI.Text({
-      position: new Vector2(0, 60),
+      position: new Vector2(0, 65),
       size: new Vector2(144, 30),
       borderColor: 'white',
       backgroundColor: 'white',
       color: 'black',
       font: 'gothic-14',
+      textAlign: 'center',
       textOverflow: 'wrap'
     });
-
+//If section is in the upcoming area
    if(e.sectionIndex === 0){
        var array = 'upcomingMatches';
        textHome.text(json.upcomingMatches[e.itemIndex].homeTeam);
        textAway.text(json.upcomingMatches[e.itemIndex].awayTeam);
-       console.log(json.upcomingMatches[e.itemIndex].tournament);
+       textTourn.text(json.upcomingMatches[e.itemIndex].tournament);
    }
+   //If section is in the live area
    else if(e.sectionIndex === 1){
        var array = 'liveMatches';
        textHome.text(json.liveMatches[e.itemIndex].homeTeam);
        textAway.text(json.liveMatches[e.itemIndex].awayTeam);
-       console.log(json.liveMatches[e.itemIndex].tournament);
-
+       textTourn.text(json.liveMatches[e.itemIndex].tournament);
+   //If section is in the completed area
    }else if(e.sectionIndex === 2){
        textHome.text(json.completedMatches[e.itemIndex].homeTeam);
        textAway.text(json.completedMatches[e.itemIndex].awayTeam);
-       console.log(json.completedMatches[e.itemIndex].tournament);
+       textTourn.text(json.completedMatches[e.itemIndex].tournament);
        textMap.text(json.completedMatches[e.itemIndex].maps[0].mapName);
+       var mapCount = json.completedMatches[e.itemIndex].maps.length;
+       for(j = 0; j < mapCount;j++){
+           console.log(json.completedMatches[e.itemIndex].maps[j].mapName);
+       }
+       textHomeScore.text(json.completedMatches[e.itemIndex].homeScoreTotal);
+       textAwayScore.text(json.completedMatches[e.itemIndex].awayScoreTotal);
    }
+   //textStage.text('Grand Final');
    //card.body('test card');
    var line = new UI.Line({
     position: new Vector2(10, 10),
@@ -277,9 +242,13 @@ menu.on('select', function(e){
    });
    //card.add(line);
     //card.show();
+    wind.add(textTourn);
+   // wind.add(textStage);
     wind.add(textMap);
     wind.add(textHome);
     wind.add(textAway)
+    wind.add(textHomeScore);
+    wind.add(textAwayScore);
     wind.show();
 });
 menu.show();

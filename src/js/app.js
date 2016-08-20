@@ -210,6 +210,10 @@ function createCompletedMenu(matches){
       menu.item(2, i, {title: matches[i].homeNick + " vs " + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + " : " + matches[i].awayScoreTotal})
     }
 }
+
+/*
+* Main window creation
+*/
 menu.on('select', function(e){
    console.log('click');
    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
@@ -217,38 +221,65 @@ menu.on('select', function(e){
    var wind = new UI.Window({status: true});
    //create a text element to put the header in
    //144 x 168
-   var textHeader = new UI.Text({
-    position: new Vector2(10, 20),
-    size: new Vector2(100, 20),
+   var textHome = new UI.Text({
+      position: new Vector2(0, 0),
+      size: new Vector2(71, 60),
+      borderColor: 'white',
+      backgroundColor: 'white',
+      color: 'black',
+      font: 'gothic-14',
+      textOverflow: 'wrap'
     });
-    //give it some stuff
-    textHeader.borderColor('white');
-    textHeader.backgroundColor('white');
-    textHeader.color('black');
+
+    var textAway = new UI.Text({
+      position: new Vector2(73, 0),
+      size: new Vector2(71, 60),
+      borderColor: 'white',
+      backgroundColor: 'white',
+      color: 'black',
+      font: 'gothic-14',
+      textOverflow: 'wrap'
+    });
+
+    var textMap = new UI.Text({
+      position: new Vector2(0, 60),
+      size: new Vector2(144, 30),
+      borderColor: 'white',
+      backgroundColor: 'white',
+      color: 'black',
+      font: 'gothic-14',
+      textOverflow: 'wrap'
+    });
+
    if(e.sectionIndex === 0){
        var array = 'upcomingMatches';
-       textHeader.text(json.upcomingMatches[e.itemIndex].homeNick + ' vs ' + json.upcomingMatches[e.itemIndex].awayNick);
-        console.log(json.upcomingMatches[e.itemIndex].tournament);
+       textHome.text(json.upcomingMatches[e.itemIndex].homeTeam);
+       textAway.text(json.upcomingMatches[e.itemIndex].awayTeam);
+       console.log(json.upcomingMatches[e.itemIndex].tournament);
    }
    else if(e.sectionIndex === 1){
        var array = 'liveMatches';
-       textHeader.text(json.liveMatches[e.itemIndex].homeNick + ' vs ' + json.liveMatches[e.itemIndex].awayNick);
-        console.log(json.liveMatches[e.itemIndex].tournament);
+       textHome.text(json.liveMatches[e.itemIndex].homeTeam);
+       textAway.text(json.liveMatches[e.itemIndex].awayTeam);
+       console.log(json.liveMatches[e.itemIndex].tournament);
 
    }else if(e.sectionIndex === 2){
-       textHeader.text(json.completedMatches[e.itemIndex].homeNick + ' vs ' + json.completedMatches[e.itemIndex].awayNick);
-        console.log(json.completedMatches[e.itemIndex].tournament);
+       textHome.text(json.completedMatches[e.itemIndex].homeTeam);
+       textAway.text(json.completedMatches[e.itemIndex].awayTeam);
+       console.log(json.completedMatches[e.itemIndex].tournament);
+       textMap.text(json.completedMatches[e.itemIndex].maps[0].mapName);
    }
    //card.body('test card');
    var line = new UI.Line({
     position: new Vector2(10, 10),
     position2: new Vector2(72, 84),
-    strokeColor: 'black',
+    strokeColor: 'white'
    });
    //card.add(line);
     //card.show();
-    wind.add(line);
-    wind.add(textHeader);
+    wind.add(textMap);
+    wind.add(textHome);
+    wind.add(textAway)
     wind.show();
 });
 menu.show();

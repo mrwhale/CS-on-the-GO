@@ -138,7 +138,7 @@ menu.on('select', function(e){
      size: new Vector2(144,20),
      backgroundColor: 'White',
      color: 'Black',
-     font: 'gothic-18',
+     font: 'gothic-18-bold',
      textOverflow: 'wrap',
      textAlign: 'center'
    });
@@ -181,7 +181,7 @@ detect whta stage its in
       borderColor: 'white',
       backgroundColor: 'white',
       color: 'black',
-      font: 'gothic-14-bold',
+      font: 'gothic-18-bold',
       textOverflow: 'wrap'
     });
 
@@ -191,22 +191,13 @@ detect whta stage its in
       borderColor: 'white',
       backgroundColor: 'white',
       color: 'black',
-      font: 'gothic-14-bold',
+      font: 'gothic-18-bold',
       textOverflow: 'wrap',
       textAlign: 'center'
 
     });
 
-    var textMap = new UI.Text({
-      position: new Vector2(0, 65),
-      size: new Vector2(144, 30),
-      borderColor: 'white',
-      backgroundColor: 'white',
-      color: 'black',
-      font: 'gothic-14',
-      textAlign: 'center',
-      textOverflow: 'wrap'
-    });
+
 //If section is in the upcoming area
    if(e.sectionIndex === 0){
        var array = 'upcomingMatches';
@@ -225,10 +216,22 @@ detect whta stage its in
        textHome.text(json.completedMatches[e.itemIndex].homeTeam);
        textAway.text(json.completedMatches[e.itemIndex].awayTeam);
        textTourn.text(json.completedMatches[e.itemIndex].tournament);
-       textMap.text(json.completedMatches[e.itemIndex].maps[0].mapName);
        var mapCount = json.completedMatches[e.itemIndex].maps.length;
        for(j = 0; j < mapCount;j++){
+             textMap = new UI.Text({
+                position: new Vector2(0, 65),
+                size: new Vector2(144, 30),
+                borderColor: 'white',
+                backgroundColor: 'white',
+                color: 'black',
+                font: 'gothic-18',
+                textAlign: 'center',
+                textOverflow: 'wrap'
+            });
+            textMap.text(json.completedMatches[e.itemIndex].maps[j].mapName);
            console.log(json.completedMatches[e.itemIndex].maps[j].mapName);
+           wind.add(textMap);
+           //create text feild where map can go, then add them to window
        }
        textHomeScore.text(json.completedMatches[e.itemIndex].homeScoreTotal);
        textAwayScore.text(json.completedMatches[e.itemIndex].awayScoreTotal);
@@ -244,7 +247,6 @@ detect whta stage its in
     //card.show();
     wind.add(textTourn);
    // wind.add(textStage);
-    wind.add(textMap);
     wind.add(textHome);
     wind.add(textAway)
     wind.add(textHomeScore);

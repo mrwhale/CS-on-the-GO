@@ -17,6 +17,14 @@ Pebble.addEventListener('ready', function() {
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :( 
 // so sad
+var splashWindow = new UI.Window();
+var splashImage = new UI.Image({
+    position: new Vector2(0, 0),
+    size: new Vector2(144, 168),
+    image: 'images/logo_splash.png'
+})
+splashWindow.add(splashImage);
+splashWindow.show();
 
 var menu = new UI.Menu();
 getCSGO();
@@ -31,7 +39,7 @@ function getCSGO(){
   console.log('fetching csgo');
   var req = new XMLHttpRequest();
   console.log('watchtoken' + Pebble.getWatchToken());
-  var url = 'http://52.65.110.247/pebble/v1/' + Pebble.getWatchToken();
+  var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   console.log(url);
   req.open("GET", url);
   // Specify the callback for when the request is completed
@@ -46,7 +54,7 @@ function getCSGO(){
             createUpcomingMenu(json.upcomingMatches);
             console.log('Creating Complted menu items');
             createCompletedMenu(json.completedMatches);
-            
+            amReady();            
             
         }else{
             console.log('Error in http');
@@ -122,25 +130,30 @@ function createCompletedMenu(matches){
 * Main window creation
 */
 menu.on('select', function(e){
-   console.log('click');
-   console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-   //create a new window for the more info to be displayed in
-   var wind = new UI.Window({
-     status: true,
-     scrollable: true,
-     backgroundColor: 'white'
-     });
-   //create a text element to put the header in
-   //144 x 168
-   var textTourn = new UI.Text({
-     position: new Vector2(0,0),
-     size: new Vector2(144,20),
-     backgroundColor: 'White',
-     color: 'Black',
-     font: 'gothic-18-bold',
-     textOverflow: 'wrap',
-     textAlign: 'center'
-   });
+    //Only show extra info Card if section is Completed Matches. 
+    // This is an easy hack to not open the card if the section is live or upcoming
+    if(e.sectionIndex === 0 || e.sectionIndex === 1){
+        return
+    }
+    console.log('click');
+    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
+    //create a new window for the more info to be displayed in
+    var wind = new UI.Window({
+        status: true,
+        scrollable: true,
+        backgroundColor: 'white'
+        });
+    //create a text element to put the header in
+    //144 x 168 aplite
+    var textTourn = new UI.Text({
+        position: new Vector2(0,0),
+        size: new Vector2(144,20),
+        backgroundColor: 'White',
+        color: 'Black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap',
+        textAlign: 'center'
+    });
 /* Going to leave this out for now, maybe bring it in when i can somehow
 detect whta stage its in
     var textStage = new UI.Text({
@@ -153,53 +166,54 @@ detect whta stage its in
    }); */
 
    //Lets create some UI elements to display the cards
-  var line = new UI.Line({
-    position: new Vector2(71, 20),
-    position2: new Vector2(71, 65),
-    strokeColor: 'black',
-    strokeWidth: 2
-   });
+    var line = new UI.Line({
+        position: new Vector2(71, 20),
+        position2: new Vector2(71, 65),
+        strokeColor: 'black',
+        strokeWidth: 2
+    });
 
-   var textHome = new UI.Text({
-      position: new Vector2(0, 20),
-      size: new Vector2(71, 30),
-      borderColor: 'white',
-      backgroundColor: 'white',
-      color: 'black',
-      font: 'gothic-14',
-      textOverflow: 'wrap'
+    var textHome = new UI.Text({
+        position: new Vector2(0, 20),
+        size: new Vector2(71, 30),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-14',
+        textOverflow: 'wrap'
     });
 
     var textAway = new UI.Text({
-      position: new Vector2(73, 20),
-      size: new Vector2(71, 30),
-      borderColor: 'white',
-      backgroundColor: 'white',
-      color: 'black',
-      font: 'gothic-14',
-      textOverflow: 'wrap'
-      //textAlign: 'center'
+        position: new Vector2(73, 20),
+        size: new Vector2(71, 30),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-14',
+        textOverflow: 'wrap'
+        //textAlign: 'center'
     });
 
-   var textHomeScore = new UI.Text({
-      position: new Vector2(0, 50),
-      size: new Vector2(71, 15),
-      borderColor: 'white',
-      backgroundColor: 'white',
-      color: 'black',
-      font: 'gothic-18-bold',
-      textOverflow: 'wrap'
-    });
+    var textHomeScore = new UI.Text({
+        position: new Vector2(0, 50),
+        size: new Vector2(71, 15),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap'
+        });
 
     var textAwayScore = new UI.Text({
-      position: new Vector2(73, 50),
-      size: new Vector2(71, 15),
-      borderColor: 'white',
-      backgroundColor: 'white',
-      color: 'black',
-      font: 'gothic-18-bold',
-      textOverflow: 'wrap'
-    });
+        position: new Vector2(73, 50),
+        size: new Vector2(71, 15),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap'
+     });
+
     var textMap0 = new UI.Text({
         position: new Vector2(0, 65),
         size: new Vector2(144, 20),
@@ -209,7 +223,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+    });
     var textMapScoreHome0 = new UI.Text({
         position: new Vector2(0, 85),
         size: new Vector2(71, 18),
@@ -219,7 +233,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+    });
     var textMapScoreAway0 = new UI.Text({
         position: new Vector2(73, 85),
         size: new Vector2(71, 18),
@@ -229,7 +243,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+    });
     var textMap1 = new UI.Text({
         position: new Vector2(0, 103),
         size: new Vector2(144, 20),
@@ -239,7 +253,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+        });
     var textMapScoreHome1 = new UI.Text({
         position: new Vector2(0, 123),
         size: new Vector2(71, 18),
@@ -249,7 +263,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+         });
     var textMapScoreAway1 = new UI.Text({
         position: new Vector2(73, 123),
         size: new Vector2(71, 18),
@@ -259,7 +273,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+        });
     var textMap2 = new UI.Text({
         position: new Vector2(0, 141),
         size: new Vector2(144, 20),
@@ -269,7 +283,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+        });
     var textMapScoreHome2 = new UI.Text({
         position: new Vector2(0, 161),
         size: new Vector2(71, 18),
@@ -279,7 +293,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+        });
     var textMapScoreAway2 = new UI.Text({
         position: new Vector2(73, 161),
         size: new Vector2(71, 18),
@@ -289,7 +303,7 @@ detect whta stage its in
         font: 'gothic-18',
         textAlign: 'center',
         textOverflow: 'wrap'
-            });
+        });
 
 //If section is in the upcoming area
    if(e.sectionIndex === 0){
@@ -306,13 +320,13 @@ detect whta stage its in
        textTourn.text(json.upcomingMatches[e.itemIndex].tournament);
    //If section is in the completed area
    }else if(e.sectionIndex === 2){
+       //todo if its a 1 mapper, but the same team play 2 maps, join them together into 1 list
        textHome.text(json.completedMatches[e.itemIndex].homeTeam);
        textAway.text(json.completedMatches[e.itemIndex].awayTeam);
        textTourn.text(json.completedMatches[e.itemIndex].tournament);
        var mapCount = json.completedMatches[e.itemIndex].maps.length;
-       var textMapInfo = "";
+       //lets find out how many maps there are, and create a card that fits that bill
        for(j = 0; j < mapCount;j++){
-           textMapInfo += "test " + j + '\n';
            if(j === 0){
                if(mapCount == 1){
                    //If there is only 1 map, then only display the map name
@@ -389,8 +403,11 @@ detect whta stage its in
     wind.add(textAwayScore);
     wind.show();
 });
-menu.show();
 
+function amReady(){
+    splashWindow.hide()
+    menu.show();
+}
 /*menu.selection(function(e){
    console.log('click'); 
 });

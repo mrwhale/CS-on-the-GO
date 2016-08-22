@@ -1,99 +1,6 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
-/**
- * Welcome to Pebble.js!
- *
- * This is where you write your app.
- 
-var ajax = require('ajax');
-var UI = require('ui');
-var Vector2 = require('vector2');
 
-var main = new UI.Card({
-  title: 'Pebble.js',
-  icon: 'images/menu_icon.png',
-  subtitle: 'Hello World!',
-  body: 'Press any button.',
-  subtitleColor: 'indigo', // Named colors
-  bodyColor: '#9a0036' // Hex colors
-});
-ajax({url: 'www.google.com.au'},
-    function(data){
-      console.log(data);
-    });
-
-main.show();
-
-main.on('click', 'up', function(e) {
-  var menu = new UI.Menu({
-    sections: [{
-      items: [{
-        title: 'Pebble.js',
-        icon: 'images/menu_icon.png',
-        subtitle: 'Can do Menus'
-      }, {
-        title: 'Second Item',
-        subtitle: 'Subtitle Text'
-      }, {
-        title: 'Third Item',
-      }, {
-        title: 'Fourth Item',
-      }]
-    }]
-  });
-  menu.on('select', function(e) {
-    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-    console.log('The item is titled "' + e.item.title + '"');
-  });
-  menu.show();
-});
-
-main.on('click', 'select', function(e) {
-  var wind = new UI.Window({
-    backgroundColor: 'black'
-  });
-  var radial = new UI.Radial({
-    size: new Vector2(140, 140),
-    angle: 0,
-    angle2: 300,
-    radius: 20,
-    backgroundColor: 'cyan',
-    borderColor: 'celeste',
-    borderWidth: 1,
-  });
-  var textfield = new UI.Text({
-    size: new Vector2(140, 60),
-    font: 'gothic-24-bold',
-    text: 'Dynamic\nWindow',
-    textAlign: 'center'
-  });
-  var windSize = wind.size();
-  // Center the radial in the window
-  var radialPos = radial.position()
-      .addSelf(windSize)
-      .subSelf(radial.size())
-      .multiplyScalar(0.5);
-  radial.position(radialPos);
-  // Center the textfield in the window
-  var textfieldPos = textfield.position()
-      .addSelf(windSize)
-      .subSelf(textfield.size())
-      .multiplyScalar(0.5);
-  textfield.position(textfieldPos);
-  wind.add(radial);
-  wind.add(textfield);
-  wind.show();
-});
-
-main.on('click', 'down', function(e) {
-  var card = new UI.Card();
-  card.title('A Card');
-  card.subtitle('Is a Window');
-  card.body('The simplest window type in Pebble.js.');
-  card.show();
-});
-*/
-//var UI = require('ui');
 //todo display messages on errors when cant load etc
 // Hysuo65lk
 // 
@@ -108,6 +15,17 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
 });
 //Create a new UI
+//turns out you cant change font in a pebblejs menu list :( 
+// so sad
+var splashWindow = new UI.Window();
+var splashImage = new UI.Image({
+    position: new Vector2(0, 0),
+    size: new Vector2(144, 168),
+    image: 'images/logo_splash.png'
+})
+splashWindow.add(splashImage);
+splashWindow.show();
+
 var menu = new UI.Menu();
 getCSGO();
 
@@ -117,13 +35,11 @@ getCSGO();
  * Maybe make this require URL as input, would make it more friendly to change
  * IP is hard coded at this time, once domain name is setup will replace with that
  */
-
-
 function getCSGO(){
   console.log('fetching csgo');
   var req = new XMLHttpRequest();
   console.log('watchtoken' + Pebble.getWatchToken());
-  var url = 'http://52.65.110.247/pebble/v1/' + Pebble.getWatchToken();
+  var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   console.log(url);
   req.open("GET", url);
   // Specify the callback for when the request is completed
@@ -132,13 +48,13 @@ function getCSGO(){
         if(req.status === 200){
             // The request was successfully completed!
             json = JSON.parse(req.responseText);
-            console.log('creating Upcoming menu items');
-            createUpcomingMenu(json.upcomingMatches);
             console.log('Creating Live menu items');
             createLiveMenu(json.liveMatches);
+            console.log('creating Upcoming menu items');
+            createUpcomingMenu(json.upcomingMatches);
             console.log('Creating Complted menu items');
             createCompletedMenu(json.completedMatches);
-            
+            amReady();            
             
         }else{
             console.log('Error in http');
@@ -154,6 +70,22 @@ function getCSGO(){
 }
 
 /*
+ * Function to create the Live Matches part of the menu
+ * Takes a json object as input, and draws up its own section in the menu
+ * todo if there are no live matches, dont display
+ * todo move live matches to the first part of the menu
+ */
+function createLiveMenu(matches){
+    //create "items" array for each match and then display menu
+    var items = [];
+    var secLive = { title: 'Live' };
+    menu.section(0, secLive);
+    for(i in matches){
+      //console.log(matches[i].tournament);
+      menu.item(0, i, {title: matches[i].homeNick + " vs " + matches[i].awayNick, subtitle: matches[i].tournament})
+    }
+}
+/*
  * Function to create the Upcoming Matches part of the menu
  * Takes a json object as input, and draws up its own section in the menu
  */
@@ -161,7 +93,7 @@ function createUpcomingMenu(matches){
     //create "items" array for each match and then display menu
     var items = [];
     var secUpcoming = { title: 'Upcoming' };
-    menu.section(0, secUpcoming);
+    menu.section(1, secUpcoming);
     for(i in matches){
       //console.log(matches[i].tournament);
       x = Date.now()
@@ -176,24 +108,7 @@ function createUpcomingMenu(matches){
         awayName = matches[i].awayTeam;
 
     }
-      menu.item(0, i, {title: homeName + " vs " + awayName, subtitle: millisToTime(z)})
-    }
-}
-/*
- * Function to create the Live Matches part of the menu
- * Takes a json object as input, and draws up its own section in the menu
- * todo if there are no live matches, dont display
- * todo move live matches to the first part of the menu
- */
-function createLiveMenu(matches){
-    //create "items" array for each match and then display menu
-    var items = [];
-    var secLive = { title: 'Live' };
-    menu.section(1, secLive);
-    for(i in matches){
-        console.log(i);
-      //console.log(matches[i].tournament);
-      menu.item(1, i, {title: matches[i].homeTeam + " vs " + matches[i].awayTeam})
+      menu.item(1, i, {title: homeName + " vs " + awayName, subtitle: millisToTime(z)})
     }
 }
 
@@ -210,49 +125,289 @@ function createCompletedMenu(matches){
       menu.item(2, i, {title: matches[i].homeNick + " vs " + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + " : " + matches[i].awayScoreTotal})
     }
 }
-menu.on('select', function(e){
-   console.log('click');
-   console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-   //create a new window for the more info to be displayed in
-   var wind = new UI.Window({status: true});
-   //create a text element to put the header in
-   //144 x 168
-   var textHeader = new UI.Text({
-    position: new Vector2(10, 20),
-    size: new Vector2(100, 20),
-    });
-    //give it some stuff
-    textHeader.borderColor('white');
-    textHeader.backgroundColor('white');
-    textHeader.color('black');
-   if(e.sectionIndex === 0){
-       var array = 'upcomingMatches';
-       textHeader.text(json.upcomingMatches[e.itemIndex].homeNick + ' vs ' + json.upcomingMatches[e.itemIndex].awayNick);
-        console.log(json.upcomingMatches[e.itemIndex].tournament);
-   }
-   else if(e.sectionIndex === 1){
-       var array = 'liveMatches';
-       textHeader.text(json.liveMatches[e.itemIndex].homeNick + ' vs ' + json.liveMatches[e.itemIndex].awayNick);
-        console.log(json.liveMatches[e.itemIndex].tournament);
 
-   }else if(e.sectionIndex === 2){
-       textHeader.text(json.completedMatches[e.itemIndex].homeNick + ' vs ' + json.completedMatches[e.itemIndex].awayNick);
-        console.log(json.completedMatches[e.itemIndex].tournament);
+/*
+* Main window creation
+*/
+menu.on('select', function(e){
+    //Only show extra info Card if section is Completed Matches. 
+    // This is an easy hack to not open the card if the section is live or upcoming
+    if(e.sectionIndex === 0 || e.sectionIndex === 1){
+        return
+    }
+    console.log('click');
+    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
+    //create a new window for the more info to be displayed in
+    var wind = new UI.Window({
+        status: true,
+        scrollable: true,
+        backgroundColor: 'white'
+        });
+    //create a text element to put the header in
+    //144 x 168 aplite
+    var textTourn = new UI.Text({
+        position: new Vector2(0,0),
+        size: new Vector2(144,20),
+        backgroundColor: 'White',
+        color: 'Black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap',
+        textAlign: 'center'
+    });
+/* Going to leave this out for now, maybe bring it in when i can somehow
+detect whta stage its in
+    var textStage = new UI.Text({
+     position: new Vector2(0,20),
+     size: new Vector2(144,15),
+     backgroundColor: 'White',
+     color: 'Black',
+     font: 'gothic-14',
+     textAlign: 'center'
+   }); */
+
+   //Lets create some UI elements to display the cards
+    var line = new UI.Line({
+        position: new Vector2(71, 20),
+        position2: new Vector2(71, 65),
+        strokeColor: 'black',
+        strokeWidth: 2
+    });
+
+    var textHome = new UI.Text({
+        position: new Vector2(0, 20),
+        size: new Vector2(71, 30),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-14',
+        textOverflow: 'wrap'
+    });
+
+    var textAway = new UI.Text({
+        position: new Vector2(73, 20),
+        size: new Vector2(71, 30),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-14',
+        textOverflow: 'wrap'
+        //textAlign: 'center'
+    });
+
+    var textHomeScore = new UI.Text({
+        position: new Vector2(0, 50),
+        size: new Vector2(71, 15),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap'
+        });
+
+    var textAwayScore = new UI.Text({
+        position: new Vector2(73, 50),
+        size: new Vector2(71, 15),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18-bold',
+        textOverflow: 'wrap'
+     });
+
+    var textMap0 = new UI.Text({
+        position: new Vector2(0, 65),
+        size: new Vector2(144, 20),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+    });
+    var textMapScoreHome0 = new UI.Text({
+        position: new Vector2(0, 85),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+    });
+    var textMapScoreAway0 = new UI.Text({
+        position: new Vector2(73, 85),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+    });
+    var textMap1 = new UI.Text({
+        position: new Vector2(0, 103),
+        size: new Vector2(144, 20),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+        });
+    var textMapScoreHome1 = new UI.Text({
+        position: new Vector2(0, 123),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+         });
+    var textMapScoreAway1 = new UI.Text({
+        position: new Vector2(73, 123),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+        });
+    var textMap2 = new UI.Text({
+        position: new Vector2(0, 141),
+        size: new Vector2(144, 20),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+        });
+    var textMapScoreHome2 = new UI.Text({
+        position: new Vector2(0, 161),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+        });
+    var textMapScoreAway2 = new UI.Text({
+        position: new Vector2(73, 161),
+        size: new Vector2(71, 18),
+        borderColor: 'white',
+        backgroundColor: 'white',
+        color: 'black',
+        font: 'gothic-18',
+        textAlign: 'center',
+        textOverflow: 'wrap'
+        });
+
+//If section is in the upcoming area
+   if(e.sectionIndex === 0){
+       var array = 'liveMatches';
+       textHome.text(json.liveMatches[e.itemIndex].homeTeam);
+       textAway.text(json.liveMatches[e.itemIndex].awayTeam);
+       textTourn.text(json.liveMatches[e.itemIndex].tournament);
    }
+   //If section is in the live area
+   else if(e.sectionIndex === 1){
+       var array = 'upcomingMatches';
+       textHome.text(json.upcomingMatches[e.itemIndex].homeTeam);
+       textAway.text(json.upcomingMatches[e.itemIndex].awayTeam);
+       textTourn.text(json.upcomingMatches[e.itemIndex].tournament);
+   //If section is in the completed area
+   }else if(e.sectionIndex === 2){
+       //todo if its a 1 mapper, but the same team play 2 maps, join them together into 1 list
+       textHome.text(json.completedMatches[e.itemIndex].homeTeam);
+       textAway.text(json.completedMatches[e.itemIndex].awayTeam);
+       textTourn.text(json.completedMatches[e.itemIndex].tournament);
+       var mapCount = json.completedMatches[e.itemIndex].maps.length;
+       //lets find out how many maps there are, and create a card that fits that bill
+       for(j = 0; j < mapCount;j++){
+           if(j === 0){
+               if(mapCount == 1){
+                   //If there is only 1 map, then only display the map name
+                   textMap0.text(json.completedMatches[e.itemIndex].maps[j].mapName);
+                   wind.add(textMap0);
+               }else{
+               //add to map0
+               // if more then 1 map, then we want to show map scores too
+                    textMap0.text(json.completedMatches[e.itemIndex].maps[j].mapName);
+                    textMapScoreHome0.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
+                    textMapScoreAway0.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
+                    var line2 = new UI.Line({
+                        position: new Vector2(71, 85),
+                        position2: new Vector2(71, 103),
+                        strokeColor: 'black',
+                        strokeWidth: 2
+                    });
+                    wind.add(line2);
+                    wind.add(textMap0);
+                    wind.add(textMapScoreHome0);
+                    wind.add(textMapScoreAway0);
+               }
+           }else if(j === 1){
+               //add to map1
+               textMap1.text(json.completedMatches[e.itemIndex].maps[j].mapName);
+               textMapScoreHome1.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
+               textMapScoreAway1.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
+               var line3 = new UI.Line({
+                        position: new Vector2(71, 123),
+                        position2: new Vector2(71, 138),
+                        strokeColor: 'black',
+                        strokeWidth: 2
+               });
+               wind.add(line3);
+               wind.add(textMap1);
+               wind.add(textMapScoreHome1);
+               wind.add(textMapScoreAway1);
+           }else if(j === 2){
+               //add to map1
+               textMap2.text(json.completedMatches[e.itemIndex].maps[j].mapName);
+               textMapScoreHome2.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
+               textMapScoreAway2.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
+               var line4 = new UI.Line({
+                        position: new Vector2(71, 161),
+                        position2: new Vector2(71, 179),
+                        strokeColor: 'black',
+                        strokeWidth: 2
+               });
+               wind.add(line4);
+               wind.add(textMap2);
+               wind.add(textMapScoreHome2);
+               wind.add(textMapScoreAway2);
+           }
+           //textMap.text(json.completedMatches[e.itemIndex].maps[j].mapName + "\n");
+           //console.log(json.completedMatches[e.itemIndex].maps[j].mapName);
+           //create text feild where map can go, then add them to window
+       }
+       //textMap.text(textMapInfo);
+       textHomeScore.text(json.completedMatches[e.itemIndex].homeScoreTotal);
+       textAwayScore.text(json.completedMatches[e.itemIndex].awayScoreTotal);
+   }
+   //textStage.text('Grand Final');
    //card.body('test card');
-   var line = new UI.Line({
-    position: new Vector2(10, 10),
-    position2: new Vector2(72, 84),
-    strokeColor: 'black',
-   });
+
    //card.add(line);
     //card.show();
+    wind.add(textTourn);
     wind.add(line);
-    wind.add(textHeader);
+   // wind.add(textStage);
+    wind.add(textHome);
+    wind.add(textAway)
+    //wind.add(textMap);
+    wind.add(textHomeScore);
+    wind.add(textAwayScore);
     wind.show();
 });
-menu.show();
 
+function amReady(){
+    splashWindow.hide()
+    menu.show();
+}
 /*menu.selection(function(e){
    console.log('click'); 
 });

@@ -1,32 +1,58 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
-
+var Settings = require('settings');
 //todo display messages on errors when cant load etc
 // Hysuo65lk
-// 
-//todo add this splash screen on load
-//var splashScreen = new UI.Card({ banner: 'images/splash.png' });
-//splashScreen.show();
+var Clay = require('clay');
+var clayConfig = require('config.json');
+var clay = new Clay(clayConfig, null, {autoHandleEvents: false});
+var menu = new UI.Menu();
 
-//Event listener to make sure app is ready!
+Pebble.addEventListener('showConfiguration', function(e) {
+  Pebble.openURL(clay.generateUrl());
+});
 
-Pebble.addEventListener('ready', function() {
-  // PebbleKit JS is ready!
-  console.log('PebbleKit JS ready!');
+Pebble.addEventListener('webviewclosed', function(e) {
+  if (e && !e.response) {
+    console.log('something broke in returning');
+    return;
+  }
+  console.log('retruning from webview');
+  var dict = clay.getSettings(e.response);
+  console.log(dict);
+  // Save the Clay settings to the Settings module. 
+  Settings.option(dict);
+
+  console.log(JSON.stringify(dict));
+  //todo after closing config, reload the window. call getCSGO?
+  //https://forums.pebble.com/t/pebblejs-how-to-dynamically-create-a-ui-menu/11191/17
+  //check if setting is enabled, then call it
+  isEnabled();
+  menu.hide();
+  getCSGO();
 });
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :( 
 // so sad
 var splashWindow = new UI.Window();
+
 var splashImage = new UI.Image({
     position: new Vector2(0, 0),
     size: new Vector2(144, 168),
-    image: 'images/logo_splash.png'
-})
+    image: 'IMAGE_LOGO_CSGO_SPLASH'
+});
+
 splashWindow.add(splashImage);
 splashWindow.show();
+Pebble.addEventListener('ready', function() {
+  // PebbleKit JS is ready!
+  console.log('PebbleKit JS ready!');
+});
 
-var menu = new UI.Menu();
+//todo check settings to see if filter is enabled
+//if enabled call getCSGO with the filter options
+isEnabled();
+//todo change this to accept filter options, 
 getCSGO();
 
 //todo extend this to be able to handle the filter options too
@@ -41,7 +67,7 @@ function getCSGO(){
   console.log('watchtoken' + Pebble.getWatchToken());
   var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   console.log(url);
-  req.open("GET", url);
+  req.open('GET', url);
   // Specify the callback for when the request is completed
   req.onload = function() {
     if(req.readyState === 4 ){
@@ -69,37 +95,47 @@ function getCSGO(){
   //https://pebble.github.io/pebblejs/
 }
 
+
+function isEnabled(){
+    if(Settings.option('enabled')){
+        console.log('Enabled, lets get things ready');
+        return true;
+    }else{
+        console.log('Disabled, sending default filter');
+        return false;
+    }
+}
+
 /*
  * Function to create the Live Matches part of the menu
  * Takes a json object as input, and draws up its own section in the menu
- * todo if there are no live matches, dont display
- * todo move live matches to the first part of the menu
  */
 function createLiveMenu(matches){
-    //create "items" array for each match and then display menu
+    //create 'items' array for each match and then display menu
     var items = [];
     var secLive = { title: 'Live' };
     menu.section(0, secLive);
     for(i in matches){
       //console.log(matches[i].tournament);
-      menu.item(0, i, {title: matches[i].homeNick + " vs " + matches[i].awayNick, subtitle: matches[i].tournament})
+      menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament});
     }
 }
+
 /*
  * Function to create the Upcoming Matches part of the menu
  * Takes a json object as input, and draws up its own section in the menu
  */
 function createUpcomingMenu(matches){
-    //create "items" array for each match and then display menu
+    //create 'items' array for each match and then display menu
     var items = [];
     var secUpcoming = { title: 'Upcoming' };
     menu.section(1, secUpcoming);
     for(i in matches){
       //console.log(matches[i].tournament);
-      x = Date.now()
+      x = Date.now();
       y = matches[i].timestamp * 1000;
       z = y - x;
-    if (matches[i].homeNick !== "") {
+    if (matches[i].homeNick !== '') {
         homeName = matches[i].homeNick;
         awayName = matches[i].awayNick;
 
@@ -108,7 +144,7 @@ function createUpcomingMenu(matches){
         awayName = matches[i].awayTeam;
 
     }
-      menu.item(1, i, {title: homeName + " vs " + awayName, subtitle: millisToTime(z)})
+      menu.item(1, i, {title: homeName + ' vs ' + awayName, subtitle: millisToTime(z)});
     }
 }
 
@@ -116,13 +152,13 @@ function createUpcomingMenu(matches){
  * Function to create the completed matches part of the menu
  */
 function createCompletedMenu(matches){
-    //create "items" array for each match and then display menu
+    //create 'items' array for each match and then display menu
     var items = [];
     var secCompleted = { title: 'Completed' };
     menu.section(2, secCompleted);
     for(i in matches){
       //console.log(matches[i].tournament);
-      menu.item(2, i, {title: matches[i].homeNick + " vs " + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + " : " + matches[i].awayScoreTotal})
+      menu.item(2, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + ' : ' + matches[i].awayScoreTotal});
     }
 }
 
@@ -130,10 +166,10 @@ function createCompletedMenu(matches){
 * Main window creation
 */
 menu.on('select', function(e){
-    //Only show extra info Card if section is Completed Matches. 
+    // Only show extra info Card if section is Completed Matches. 
     // This is an easy hack to not open the card if the section is live or upcoming
     if(e.sectionIndex === 0 || e.sectionIndex === 1){
-        return
+        return;
     }
     console.log('click');
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
@@ -380,8 +416,6 @@ detect whta stage its in
                wind.add(textMapScoreHome2);
                wind.add(textMapScoreAway2);
            }
-           //textMap.text(json.completedMatches[e.itemIndex].maps[j].mapName + "\n");
-           //console.log(json.completedMatches[e.itemIndex].maps[j].mapName);
            //create text feild where map can go, then add them to window
        }
        //textMap.text(textMapInfo);
@@ -408,30 +442,22 @@ function amReady(){
     splashWindow.hide()
     menu.show();
 }
-/*menu.selection(function(e){
-   console.log('click'); 
-});
-menu.on('click', 'select', function(e) {
-    var card = new UI.Card();
-    card.title('A Card');
-    card.body('the simplest window')
-    card.show();
-});*/
+
 function millisToTime(ms) {
     x = ms / 1000;
-    seconds = Math.floor(x % 60);
+    var seconds = Math.floor(x % 60);
     x /= 60;
-    minutes = Math.floor(x % 60);
+    var minutes = Math.floor(x % 60);
     x /= 60;
-    hours = Math.floor(x % 24);
+    var hours = Math.floor(x % 24);
     x /= 24;
-    days = Math.floor(x);
-    if (days == "" && hours == "") {
-        return minutes + " Minutes, "  + seconds + " Seconds";
-    } else if (days == "") {
-        return  hours + " Hours, " + minutes + " Minutes";
+    var days = Math.floor(x);
+    if (days == '' && hours == '') {
+        return minutes + ' Minutes, '  + seconds + ' Seconds';
+    } else if (days == '') {
+        return  hours + ' Hours, ' + minutes + ' Minutes';
     } else {
-        return  days + " Days, " + hours + " Hours, " + minutes + " Minutes";
+        return  days + ' Days, ' + hours + ' Hours, ' + minutes + ' Minutes';
     }
 
 }

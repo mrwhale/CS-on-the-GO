@@ -9,9 +9,6 @@ dist.zip
 # Ignore installed node modules
 node_modules/
 
-# ignore pngs i create
-*.png
-
 #ignore the netbeans folder
 nbproject/
 

@@ -1,0 +1,125 @@
+/*[{
+  "type": "select",
+  "appKey": "flavor",
+  "defaultValue": "grape",
+  "label": "Favorite Flavor",
+  "options": [
+    { 
+      "label": "", 
+      "value": "" 
+    },
+    {
+      "label": "Fruits",
+      "value": [
+        { 
+          "label": "Berry",
+          "value": "berry" 
+        },
+        { 
+          "label": "Grape",
+          "value": "grape" 
+        },
+        { 
+          "label": "Banana",
+          "value": "banana" 
+        }
+      ]
+    }, 
+    {
+      "label": "Candy",
+      "value": [
+        { 
+          "label": "Chocolate",
+          "value": "chocolate" 
+        },
+        { 
+          "label": "Cream",
+          "value": "cream" 
+        },
+        { 
+          "label": "Lollipop",
+          "value": "lollipop" 
+        }
+      ]
+    }
+  ],
+  "attributes": {
+    "required": "required"
+  }
+},{"type": "submit",
+  "defaultValue": "Save"}] */
+[
+ {
+    "type": "heading",
+    "defaultValue": "Filter your CSGO"
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "toggle",
+        "appKey": "enabled",
+        "defaultValue": false,
+        "label": "Enable Filter"
+      },
+      {
+        "type": "checkboxgroup",
+        "appKey": "teams",
+        "label": "Select Teams",
+        "options": [{
+          "label": "Navi",
+          "value":"0"
+        },
+        {
+          "label": "VP",
+          "value":"1"
+        },
+        {
+          "label": "EnVYus",
+          "value":"2"
+        }
+      ]},{
+        "type": "checkboxgroup",
+        "appKey": "Tournaments",
+        "label": "Select Tournaments",
+        "options": [{
+          "label": "ESEA ESL",
+          "value":"0"
+        },
+        {
+          "label": "DreamHack malamo",
+          "value":"1"
+        },
+        {
+          "label": "That other one",
+          "value":"2"
+        }
+        ]
+      },
+      {
+        "type":"checkboxgroup",
+        "appKey":"status",
+        "label": "Match status",
+        "defaultValue": [0,1,2],
+        "options":[
+          {
+          "label":"Upcoming",
+          "value":1
+        },
+        {
+          "label":"Live",
+          "value":0
+        },
+        {
+          "label":"Completed",
+          "value":2
+        }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save Settings"
+  }
+]

@@ -19,6 +19,11 @@
         "type": "bitmap"
       },
       {
+        "file": "images/CSontheGO-inverted-splash2.png",
+        "name": "IMAGE_LOGO_CSGO_SPLASH",
+        "type": "png"
+      },
+      {
         "file": "images/tile_splash.png",
         "name": "IMAGE_TILE_SPLASH",
         "type": "bitmap"

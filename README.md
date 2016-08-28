@@ -5,6 +5,8 @@ Pebble app to display upcoming, live and completed CSGO match details
 This app is currently in beta, and the basic functionality works. displays all upcoming CSGO match information,
 as well as completed match information with extra detials listed if you click through (see screenshots for example)
 
+Currently only tested on Aplite (Pebble OG, OG steel) and Basalt (Pebble time, and time steel). There is no colour in the app (yet!). Although this installs on Chalk (Pebble time round) it is not configured to display on round yet
+
 ### Upcoming features in 1.0 release
 1. Configuration page
 ..* Filter results how you want. Choose what tournaments you want to see, what teams you wish to only see, and what type
@@ -16,6 +18,8 @@ as well as completed match information with extra detials listed if you click th
 4. List and view team information
 3. Statistics. Get team stats
 4. Upcoming "card" to show team vs team stats based on previous match ups and percentage to win
+5. Colour!
+6. Support for round devices
 
 ### How to use
 1. Install the app!

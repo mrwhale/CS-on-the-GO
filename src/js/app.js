@@ -28,7 +28,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   //https://forums.pebble.com/t/pebblejs-how-to-dynamically-create-a-ui-menu/11191/17
   //check if setting is enabled, then call it
   isEnabled();
-  menu.hide();
+  //menu.hide();
   getCSGO();
 });
 //Create a new UI

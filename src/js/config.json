@@ -1,53 +1,3 @@
-/*[{
-  "type": "select",
-  "appKey": "flavor",
-  "defaultValue": "grape",
-  "label": "Favorite Flavor",
-  "options": [
-    { 
-      "label": "", 
-      "value": "" 
-    },
-    {
-      "label": "Fruits",
-      "value": [
-        { 
-          "label": "Berry",
-          "value": "berry" 
-        },
-        { 
-          "label": "Grape",
-          "value": "grape" 
-        },
-        { 
-          "label": "Banana",
-          "value": "banana" 
-        }
-      ]
-    }, 
-    {
-      "label": "Candy",
-      "value": [
-        { 
-          "label": "Chocolate",
-          "value": "chocolate" 
-        },
-        { 
-          "label": "Cream",
-          "value": "cream" 
-        },
-        { 
-          "label": "Lollipop",
-          "value": "lollipop" 
-        }
-      ]
-    }
-  ],
-  "attributes": {
-    "required": "required"
-  }
-},{"type": "submit",
-  "defaultValue": "Save"}] */
 [
  {
     "type": "heading",
@@ -115,6 +65,30 @@
           "value":2
         }
         ]
+      },
+      {
+        "type": "slider",
+        "appKey": "liveNumber",
+        "defaultValue": 5,
+        "label": "Live Matches",
+        "min":0,
+        "max": 10
+      },
+      {
+        "type": "slider",
+        "appKey": "upcomingNumber",
+        "defaultValue": 5,
+        "label": "Upcoming Matches",
+        "min":0,
+        "max": 10
+      },
+      {
+        "type": "slider",
+        "appKey": "completedNumber",
+        "defaultValue": 10,
+        "label": "Completed Matches",
+        "min":0,
+        "max": 15
       }
     ]
   },

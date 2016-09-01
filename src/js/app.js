@@ -29,7 +29,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   //check if setting is enabled, then call it
   isEnabled();
   //menu.hide();
-  getCSGO();
+  getCSGO(JSON.stringify(dict));
 });
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :( 
@@ -49,11 +49,14 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
 });
 
-//todo check settings to see if filter is enabled
-//if enabled call getCSGO with the filter options
-isEnabled();
-//todo change this to accept filter options, 
-getCSGO();
+//Main seciton start 
+if(isEnabled()){
+    var options = Settings.option();
+    console.log(JSON.stringify(options));
+    getCSGO(JSON.stringify(options))
+}else{
+    getCSGO();
+}
 
 //todo extend this to be able to handle the filter options too
 /*
@@ -61,11 +64,17 @@ getCSGO();
  * Maybe make this require URL as input, would make it more friendly to change
  * IP is hard coded at this time, once domain name is setup will replace with that
  */
-function getCSGO(){
+function getCSGO(filter){
+  if(filter === undefined){
+      //filter not defined to no do anything
+      var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
+  }else{
+      var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + "/" + filter;
+  }
   console.log('fetching csgo');
   var req = new XMLHttpRequest();
-  console.log('watchtoken' + Pebble.getWatchToken());
-  var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
+  //console.log('watchtoken' + Pebble.getWatchToken());
+  //var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   console.log(url);
   req.open('GET', url);
   // Specify the callback for when the request is completed

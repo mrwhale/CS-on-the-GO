@@ -27,9 +27,14 @@ Pebble.addEventListener('webviewclosed', function(e) {
   //todo after closing config, reload the window. call getCSGO?
   //https://forums.pebble.com/t/pebblejs-how-to-dynamically-create-a-ui-menu/11191/17
   //check if setting is enabled, then call it
-  isEnabled();
+  
   //menu.hide();
-  getCSGO(JSON.stringify(dict));
+  if(isEnabled()){
+      getCSGO(JSON.stringify(dict));
+  }else{
+      getCSGO();
+  }
+  
 });
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :( 

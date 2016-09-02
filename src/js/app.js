@@ -7,6 +7,7 @@ var Clay = require('clay');
 var clayConfig = require('config.json');
 var clay = new Clay(clayConfig, null, {autoHandleEvents: false});
 var menu = new UI.Menu();
+var timeline = require('./timeline.js');    
 
 Pebble.addEventListener('showConfiguration', function(e) {
   Pebble.openURL(clay.generateUrl());
@@ -19,7 +20,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   }
   console.log('retruning from webview');
   var dict = clay.getSettings(e.response);
-  console.log(dict);
+  //console.log(dict);
   // Save the Clay settings to the Settings module. 
   Settings.option(dict);
 

@@ -1,0 +1,36 @@
+[
+  {
+      "type":"heading",
+      "defaultValue":"Filter your CSGO"
+  },
+  {
+    "type":"section",
+    "items":[
+      {
+          "type":"toggle",
+          "appKey":"enabled",
+          "defaultValue":"false",
+          "label":"Enable Filter"
+      },
+      {
+          "type":"checkboxgroup",
+          "appKey":"teams",
+          "label":"Select Teams",
+          "options":
+          [{
+              "label":"MK.",
+              "value":"0"
+              },
+              {"label":"Team X.",
+              "value":"1"
+              },
+              {
+                  "label":"Team EnVyUs",
+                  "value":"2"}
+    ]}]},
+  
+  {
+    "type":"submit",
+  "defaultValue":"Save Settings"
+  }
+  ]

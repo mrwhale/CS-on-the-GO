@@ -1,19 +1,19 @@
 {
   "appKeys": {},
-  "companyName": "harrysibenaler@gmail.com",
+  "companyName": "MrWhale",
   "longName": "CS on the GO",
   "resources": {
     "media": [
       {
-        "file": "images/menu_icon.png",
+        "file": "images/CSontheGO-inverted-icon.png",
         "menuIcon": true,
         "name": "IMAGE_MENU_ICON",
         "type": "bitmap"
       },
       {
-        "file": "images/logo_splash.png",
-        "name": "IMAGE_LOGO_SPLASH",
-        "type": "bitmap"
+        "file": "images/CSontheGO-inverted-splash2.png",
+        "name": "IMAGE_LOGO_CSGO_SPLASH",
+        "type": "png"
       },
       {
         "file": "images/tile_splash.png",
@@ -31,8 +31,7 @@
   "shortName": "CSontheGO",
   "targetPlatforms": [
     "aplite",
-    "basalt",
-    "chalk"
+    "basalt"
   ],
   "uuid": "5a4dc87b-bc0a-480d-aade-6dbf5da39e1c",
   "versionCode": 1,

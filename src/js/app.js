@@ -416,16 +416,18 @@ menu.on('longSelect',function(e){
     //var timeMs = json.upcomingMatches[e.itemIndex] * 1000; 
     //var datePin = new Date(json.upcomingMatches[e.itemIndex].timestamp).toISOString();
     // Need to make the epoch time into milliseconds to conform to what js needs
-    var datePin = new Date(json.upcomingMatches[e.itemIndex] * 1000).toISOString(); 
+    var timeMs = json.upcomingMatches[e.itemIndex]['timestamp'] * 1000;
+    console.log("time " + timeMs);
+    var datePin = new Date(timeMs).toISOString(); 
     console.log("date: " + datePin); 
     //Lets also create the body text here
-    body = json.liveMatches[e.itemIndex]['homeTeam'] + " vs " + json.liveMatches[e.itemIndex]['awayTeam'] + "\n" + json.liveMatches[e.itemIndex]['tournament']
+    body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament']
     var pin = { 
         'id': 'pin' + PIN_ID, 
         'time': datePin, 
         'layout': { 
             'type': 'genericPin', 
-            'title': 'Upcoming - ' + json.liveMatches[e.itemIndex]['homeNick'] + " vs " + json.liveMatches[e.itemIndex]['awayNick'], 
+            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'], 
             'body': body, 
             'tinyIcon': 'system://images/SCHEDULED_EVENT' 
         } 
@@ -433,7 +435,7 @@ menu.on('longSelect',function(e){
     console.log('Inserting pin in the future: ' + JSON.stringify(pin)); 
     timeline.insertUserPin(pin, function(responseText){ 
         console.log('Result: ' + responseText);
-        if(responseText == "Result: OK"){
+        if(responseText === "OK"){
             console.log("added pin successfully");
             //todo lets buzz or do an onscreen notification!
         }

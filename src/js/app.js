@@ -1,7 +1,7 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
-var timeline = require('./timeline.js'); 
-var PIN_ID = "CSontheGO";
+var timeline = require('./timeline2.js'); 
+var PIN_ID = "CSontheGOTest";
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
@@ -411,7 +411,11 @@ menu.on('longSelect',function(e){
     //Only do it for upcoming matches 
     if(e.sectionIndex === 0 || e.sectionIndex === 2){ 
         return; 
-    } 
+    }
+    var pinCard = new UI.Card({
+            body: 'Adding Pin...'
+    }); 
+    pinCard.show()
     //create pin 
     //var timeMs = json.upcomingMatches[e.itemIndex] * 1000; 
     //var datePin = new Date(json.upcomingMatches[e.itemIndex].timestamp).toISOString();
@@ -432,16 +436,27 @@ menu.on('longSelect',function(e){
             'tinyIcon': 'system://images/SCHEDULED_EVENT' 
         } 
     }; 
-    console.log('Inserting pin in the future: ' + JSON.stringify(pin)); 
-    timeline.insertUserPin(pin, function(responseText){ 
+    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+     
+    timeline.insertUserPin(pin, function(responseText){
+
         console.log('Result: ' + responseText);
         if(responseText === "OK"){
-            console.log("added pin successfully");
+            pinCard.body("Successfully added pin!");
             //todo lets buzz or do an onscreen notification!
+            //Add a card with successfully added notification and hide in 3s
+            setTimeout(function() {
+                pinCard.hide();
+            }, 3000);
+        }else{
+            //display card with error message :(
+            pinCard.title("Not successful");
+            pinCard.body("Did not add because of: " + responseText);
         }
     }); 
  
 }); 
+
 
 function amReady(){
     splashWindow.hide()

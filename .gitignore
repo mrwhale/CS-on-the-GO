@@ -8,8 +8,8 @@ dist.zip
 
 # Ignore installed node modules
 node_modules/
-icon-images/
 testpin.json
+icon-images/
 #ignore the netbeans folder
 nbproject/
 

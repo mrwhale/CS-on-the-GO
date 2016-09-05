@@ -1,9 +1,9 @@
 {
   "appKeys": {},
+  "companyName": "MrWhale",
   "capabilities": [
     "configurable"
   ],
-  "companyName": "MrWhale",
   "longName": "CS on the GO",
   "resources": {
     "media": [

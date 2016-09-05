@@ -9,8 +9,6 @@ dist.zip
 # Ignore installed node modules
 node_modules/
 testpin.json
-# ignore pngs i create
-*.png
 
 #ignore the netbeans folder
 nbproject/

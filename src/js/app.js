@@ -417,13 +417,10 @@ menu.on('longSelect',function(e){
     }); 
     pinCard.show()
     //create pin 
-    //var timeMs = json.upcomingMatches[e.itemIndex] * 1000; 
-    //var datePin = new Date(json.upcomingMatches[e.itemIndex].timestamp).toISOString();
     // Need to make the epoch time into milliseconds to conform to what js needs
     var timeMs = json.upcomingMatches[e.itemIndex]['timestamp'] * 1000;
-    console.log("time " + timeMs);
-    var datePin = new Date(timeMs).toISOString();
-    console.log("date: " + datePin); 
+    var datePin = new Date(timeMs).toISOString(); 
+    console.log("date " + datePin);
     //Lets also create the body text here
     body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
     var PIN_ID = 'csonthego' + e.itemIndex + timeMs; 
@@ -457,7 +454,7 @@ menu.on('longSelect',function(e){
             //Add a card with successfully added notification and hide in 3s
             setTimeout(function() {
                 pinCard.hide();
-            }, 2000);
+            }, 1500);
         }else{
             //display card with error message :(
             pinCard.title("Not successful");

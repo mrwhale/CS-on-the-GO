@@ -1,7 +1,7 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 var timeline = require('./timeline2.js'); 
-var PIN_ID = "CSontheGOTest";
+//var PIN_ID = "CSontheGOTest";
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
@@ -23,7 +23,7 @@ var splashWindow = new UI.Window();
 var splashImage = new UI.Image({
     position: new Vector2(0, 0),
     size: new Vector2(144, 168),
-    image: 'images/logo_splash.png'
+    image: 'IMAGE_LOGO_CSGO_SPLASH'
 })
 splashWindow.add(splashImage);
 splashWindow.show();
@@ -422,19 +422,29 @@ menu.on('longSelect',function(e){
     // Need to make the epoch time into milliseconds to conform to what js needs
     var timeMs = json.upcomingMatches[e.itemIndex]['timestamp'] * 1000;
     console.log("time " + timeMs);
-    var datePin = new Date(timeMs).toISOString(); 
+    var datePin = new Date(timeMs).toISOString();
     console.log("date: " + datePin); 
     //Lets also create the body text here
-    body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament']
+    body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
+    var PIN_ID = 'csonthego' + e.itemIndex + timeMs; 
     var pin = { 
-        'id': 'pin' + PIN_ID, 
+        'id': PIN_ID, 
         'time': datePin, 
         'layout': { 
             'type': 'genericPin', 
             'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'], 
             'body': body, 
             'tinyIcon': 'system://images/SCHEDULED_EVENT' 
-        } 
+        },
+        "reminders": [
+        {
+            "time": datePin,
+            "layout": {
+                 "type": "genericReminder",
+                 "tinyIcon": 'system://images/SCHEDULED_EVENT',
+                 "title": json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'] + " match is starting.."
+            }
+         }] 
     }; 
     console.log('Inserting pin in the future: ' + JSON.stringify(pin));
      
@@ -447,7 +457,7 @@ menu.on('longSelect',function(e){
             //Add a card with successfully added notification and hide in 3s
             setTimeout(function() {
                 pinCard.hide();
-            }, 3000);
+            }, 2000);
         }else{
             //display card with error message :(
             pinCard.title("Not successful");

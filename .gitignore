@@ -8,7 +8,7 @@ dist.zip
 
 # Ignore installed node modules
 node_modules/
-
+testpin.json
 # ignore pngs i create
 *.png
 

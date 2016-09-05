@@ -1,5 +1,7 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
+var timeline = require('./timeline2.js'); 
+//var PIN_ID = "CSontheGOTest";
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
@@ -21,7 +23,7 @@ var splashWindow = new UI.Window();
 var splashImage = new UI.Image({
     position: new Vector2(0, 0),
     size: new Vector2(144, 168),
-    image: 'images/logo_splash.png'
+    image: 'IMAGE_LOGO_CSGO_SPLASH'
 })
 splashWindow.add(splashImage);
 splashWindow.show();
@@ -403,6 +405,65 @@ detect whta stage its in
     wind.add(textAwayScore);
     wind.show();
 });
+
+menu.on('longSelect',function(e){ 
+    //on longselect for an upcoming match, lets add a pin to timeline dude 
+    //Only do it for upcoming matches 
+    if(e.sectionIndex === 0 || e.sectionIndex === 2){ 
+        return; 
+    }
+    var pinCard = new UI.Card({
+            body: 'Adding Pin...'
+    }); 
+    pinCard.show()
+    //create pin 
+    // Need to make the epoch time into milliseconds to conform to what js needs
+    var timeMs = json.upcomingMatches[e.itemIndex]['timestamp'] * 1000;
+    var datePin = new Date(timeMs).toISOString(); 
+    console.log("date " + datePin);
+    //Lets also create the body text here
+    body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
+    var PIN_ID = 'csonthego' + e.itemIndex + timeMs; 
+    var pin = { 
+        'id': PIN_ID, 
+        'time': datePin, 
+        'layout': { 
+            'type': 'genericPin', 
+            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'], 
+            'body': body, 
+            'tinyIcon': 'system://images/SCHEDULED_EVENT' 
+        },
+        "reminders": [
+        {
+            "time": datePin,
+            "layout": {
+                 "type": "genericReminder",
+                 "tinyIcon": 'system://images/SCHEDULED_EVENT',
+                 "title": json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'] + " match is starting.."
+            }
+         }] 
+    }; 
+    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+     
+    timeline.insertUserPin(pin, function(responseText){
+
+        console.log('Result: ' + responseText);
+        if(responseText === "OK"){
+            pinCard.body("Successfully added pin!");
+            //todo lets buzz or do an onscreen notification!
+            //Add a card with successfully added notification and hide in 3s
+            setTimeout(function() {
+                pinCard.hide();
+            }, 1500);
+        }else{
+            //display card with error message :(
+            pinCard.title("Not successful");
+            pinCard.body("Did not add because of: " + responseText);
+        }
+    }); 
+ 
+}); 
+
 
 function amReady(){
     splashWindow.hide()

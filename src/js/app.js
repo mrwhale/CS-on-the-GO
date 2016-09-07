@@ -1,16 +1,15 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 var Settings = require('settings');
-var timeline = require('./timeline2.js'); 
+var timeline = require('./timeline2.js');
 //var PIN_ID = "CSontheGOTest";
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
 var Clay = require('clay');
-var clayConfig = require('config.json');
+var clayConfig = require('config2.json');
 var clay = new Clay(clayConfig, null, {autoHandleEvents: false});
 var menu = new UI.Menu();
-var timeline = require('./timeline.js');    
 
 Pebble.addEventListener('showConfiguration', function(e) {
   Pebble.openURL(clay.generateUrl());
@@ -21,27 +20,27 @@ Pebble.addEventListener('webviewclosed', function(e) {
     console.log('something broke in returning');
     return;
   }
-  console.log('retruning from webview');
+  console.log('returning from webview');
   var dict = clay.getSettings(e.response);
   //console.log(dict);
-  // Save the Clay settings to the Settings module. 
+  // Save the Clay settings to the Settings module.
   Settings.option(dict);
 
   console.log(JSON.stringify(dict));
   //todo after closing config, reload the window. call getCSGO?
   //https://forums.pebble.com/t/pebblejs-how-to-dynamically-create-a-ui-menu/11191/17
   //check if setting is enabled, then call it
-  
+
   //menu.hide();
   if(isEnabled()){
       getCSGO(JSON.stringify(dict));
   }else{
       getCSGO();
   }
-  
+
 });
 //Create a new UI
-//turns out you cant change font in a pebblejs menu list :( 
+//turns out you cant change font in a pebblejs menu list :(
 // so sad
 var splashWindow = new UI.Window();
 
@@ -57,7 +56,7 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
 });
 
-//Main seciton start 
+//Main seciton start
 if(isEnabled()){
     var options = Settings.option();
     console.log(JSON.stringify(options));
@@ -75,6 +74,7 @@ if(isEnabled()){
 function getCSGO(filter){
   if(filter === undefined){
       //filter not defined to no do anything
+      //todo PLLLLLLEEEEASE dont forget to change this back to not staging when i go live
       var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   }else{
       var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + "/" + filter;
@@ -97,8 +97,8 @@ function getCSGO(filter){
             createUpcomingMenu(json.upcomingMatches);
             console.log('Creating Complted menu items');
             createCompletedMenu(json.completedMatches);
-            amReady();            
-            
+            amReady();
+
         }else{
             console.log('Error in http');
         }
@@ -183,7 +183,7 @@ function createCompletedMenu(matches){
 * Main window creation
 */
 menu.on('select', function(e){
-    // Only show extra info Card if section is Completed Matches. 
+    // Only show extra info Card if section is Completed Matches.
     // This is an easy hack to not open the card if the section is live or upcoming
     if(e.sectionIndex === 0 || e.sectionIndex === 1){
         return;
@@ -455,32 +455,32 @@ detect whta stage its in
     wind.show();
 });
 
-menu.on('longSelect',function(e){ 
-    //on longselect for an upcoming match, lets add a pin to timeline dude 
-    //Only do it for upcoming matches 
-    if(e.sectionIndex === 0 || e.sectionIndex === 2){ 
-        return; 
+menu.on('longSelect',function(e){
+    //on longselect for an upcoming match, lets add a pin to timeline dude
+    //Only do it for upcoming matches
+    if(e.sectionIndex === 0 || e.sectionIndex === 2){
+        return;
     }
     var pinCard = new UI.Card({
             body: 'Adding Pin...'
-    }); 
+    });
     pinCard.show()
-    //create pin 
+    //create pin
     // Need to make the epoch time into milliseconds to conform to what js needs
     var timeMs = json.upcomingMatches[e.itemIndex]['timestamp'] * 1000;
-    var datePin = new Date(timeMs).toISOString(); 
+    var datePin = new Date(timeMs).toISOString();
     console.log("date " + datePin);
     //Lets also create the body text here
     body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
-    var PIN_ID = 'csonthego' + e.itemIndex + timeMs; 
-    var pin = { 
-        'id': PIN_ID, 
-        'time': datePin, 
-        'layout': { 
-            'type': 'genericPin', 
-            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'], 
-            'body': body, 
-            'tinyIcon': 'system://images/SCHEDULED_EVENT' 
+    var PIN_ID = 'csonthego' + e.itemIndex + timeMs;
+    var pin = {
+        'id': PIN_ID,
+        'time': datePin,
+        'layout': {
+            'type': 'genericPin',
+            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'],
+            'body': body,
+            'tinyIcon': 'system://images/SCHEDULED_EVENT'
         },
         "reminders": [
         {
@@ -490,10 +490,10 @@ menu.on('longSelect',function(e){
                  "tinyIcon": 'system://images/SCHEDULED_EVENT',
                  "title": json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'] + " match is starting.."
             }
-         }] 
-    }; 
+         }]
+    };
     console.log('Inserting pin in the future: ' + JSON.stringify(pin));
-     
+
     timeline.insertUserPin(pin, function(responseText){
 
         console.log('Result: ' + responseText);
@@ -509,9 +509,9 @@ menu.on('longSelect',function(e){
             pinCard.title("Not successful");
             pinCard.body("Did not add because of: " + responseText);
         }
-    }); 
- 
-}); 
+    });
+
+});
 
 
 function amReady(){

@@ -1,9 +1,9 @@
 {
   "appKeys": {},
-  "companyName": "MrWhale",
   "capabilities": [
     "configurable"
   ],
+  "companyName": "MrWhale",
   "longName": "CS on the GO",
   "resources": {
     "media": [
@@ -38,7 +38,7 @@
   ],
   "uuid": "5a4dc87b-bc0a-480d-aade-6dbf5da39e1c",
   "versionCode": 1,
-  "versionLabel": "0.7",
+  "versionLabel": "0.8",
   "watchapp": {
     "hiddenApp": false,
     "watchface": false

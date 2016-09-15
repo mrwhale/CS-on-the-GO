@@ -7,12 +7,51 @@ var timeline = require('./timeline2.js');
 //todo display messages on errors when cant load etc
 // Hysuo65lk
 var Clay = require('clay');
-var clayConfig = require('config2.json');
-var clay = new Clay(clayConfig, null, {autoHandleEvents: false});
+//var clayConfig = require('config2.json');
+var clayConfig = "";
+var clay = "";
 var menu = new UI.Menu();
+var splashWindow = new UI.Window();
 
+function makeSplash(){
+    var splashImage = new UI.Image({
+        position: new Vector2(0, 0),
+        size: new Vector2(144, 168),
+        image: 'IMAGE_LOGO_CSGO_SPLASH'
+    })
+    splashWindow.add(splashImage);
+    splashWindow.show();
+
+}
 Pebble.addEventListener('showConfiguration', function(e) {
-  Pebble.openURL(clay.generateUrl());
+    console.log('fetching config json for clay');
+    var reqConfig = new XMLHttpRequest();
+    //console.log('watchtoken' + Pebble.getWatchToken());
+    //todo PLEASE dont forget to change this. maybe I should make it variable at the top of the code so i dont have to change it once
+    var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + '/filterconfig';
+    //console.log(url);
+    reqConfig.open('GET', url);
+    // Specify the callback for when the request is completed
+    reqConfig.onload = function() {
+        if(reqConfig.readyState === 4 ){
+            if(reqConfig.status === 200){
+                // The request was successfully completed!
+                var jsonConfig = JSON.parse(reqConfig.responseText);
+                clayConfig = reqConfig.responseText;
+                console.log(clayConfig);
+                clay = new Clay(jsonConfig, null, {autoHandleEvents: false});
+                Pebble.openURL(clay.generateUrl());
+            }else{
+                console.log('Error in http');
+            }
+        }else{
+            console.log('reqConfig state is error');
+        }
+    };
+    // Send the request
+  reqConfig.send(null);
+
+
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
@@ -26,13 +65,25 @@ Pebble.addEventListener('webviewclosed', function(e) {
   // Save the Clay settings to the Settings module.
   Settings.option(dict);
 
-  console.log(JSON.stringify(dict));
+  //console.log(JSON.stringify(dict));
   //todo after closing config, reload the window. call getCSGO?
   //https://forums.pebble.com/t/pebblejs-how-to-dynamically-create-a-ui-menu/11191/17
   //check if setting is enabled, then call it
 
   //menu.hide();
   if(isEnabled()){
+      makeSplash();
+      setTimeout(function(){
+          menu.hide();
+      }, 400)
+      
+      //menu = new UI.Menu();
+      //menu.remove(2);
+      //menu.each(function(index){
+      //    console.log('element  ' + JSON.stringify(index));
+      //});
+      //menu.hide()
+      //menu(clear = true);
       getCSGO(JSON.stringify(dict));
   }else{
       getCSGO();
@@ -42,15 +93,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :(
 // so sad
-var splashWindow = new UI.Window();
-
-var splashImage = new UI.Image({
-    position: new Vector2(0, 0),
-    size: new Vector2(144, 168),
-    image: 'IMAGE_LOGO_CSGO_SPLASH'
-})
-splashWindow.add(splashImage);
-splashWindow.show();
+makeSplash();
 Pebble.addEventListener('ready', function() {
   // PebbleKit JS is ready!
   console.log('PebbleKit JS ready!');
@@ -91,6 +134,7 @@ function getCSGO(filter){
         if(req.status === 200){
             // The request was successfully completed!
             json = JSON.parse(req.responseText);
+            //console.log(req.responseText);
             console.log('Creating Live menu items');
             createLiveMenu(json.liveMatches);
             console.log('creating Upcoming menu items');

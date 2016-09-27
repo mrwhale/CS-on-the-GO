@@ -6,23 +6,28 @@ var timeline = require('./timeline2.js');
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
+
 var Clay = require('clay');
 //var clayConfig = require('config2.json');
 var clayConfig = "";
 var clay = "";
 var menu = new UI.Menu();
-var splashWindow = new UI.Window();
+var splashWindow = new UI.Window({ fullscreen: true});
 
 function makeSplash(){
+    console.log("making splash");
     var splashImage = new UI.Image({
-        position: new Vector2(0, 0),
-        size: new Vector2(144, 168),
-        image: 'IMAGE_LOGO_CSGO_SPLASH'
+        image: 'images/CSontheGO-inverted-splash2.png'
     })
     splashWindow.add(splashImage);
     splashWindow.show();
-
 }
+
+//Create a new UI
+//turns out you cant change font in a pebblejs menu list :(
+// so sad
+
+
 Pebble.addEventListener('showConfiguration', function(e) {
     console.log('fetching config json for clay');
     var reqConfig = new XMLHttpRequest();
@@ -90,16 +95,14 @@ Pebble.addEventListener('webviewclosed', function(e) {
   }
 
 });
-//Create a new UI
-//turns out you cant change font in a pebblejs menu list :(
-// so sad
-makeSplash();
+
 Pebble.addEventListener('ready', function() {
   // PebbleKit JS is ready!
   console.log('PebbleKit JS ready!');
 });
 
 //Main seciton start
+makeSplash();
 if(isEnabled()){
     var options = Settings.option();
     console.log(JSON.stringify(options));
@@ -177,12 +180,21 @@ function createLiveMenu(matches){
     var secLive = { title: 'Live' };
     menu.section(0, secLive);
     for(i in matches){
+      //If nick not exist, create a temp one
+      if(matches[i].awayNick === ""){
+          matches[i].awayNick = matches[i].awayTeam.substring(0,6);
+          console.log("away nick: " + matches[i].awayNick);
+      }
+      if(matches[i].homeNick === ""){
+          matches[i].homeNick = matches[i].homeTeam.substring(0,6);
+          console.log("home nick: " + matches[i].homeNick);
+      }
       //console.log(matches[i].tournament);
       menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament});
     }
 }
 
-/*
+/*  
  * Function to create the Upcoming Matches part of the menu
  * Takes a json object as input, and draws up its own section in the menu
  */
@@ -196,16 +208,16 @@ function createUpcomingMenu(matches){
       x = Date.now();
       y = matches[i].timestamp * 1000;
       z = y - x;
-    if (matches[i].homeNick !== '') {
-        homeName = matches[i].homeNick;
-        awayName = matches[i].awayNick;
-
-    } else {
-        homeName = matches[i].homeTeam;
-        awayName = matches[i].awayTeam;
-
-    }
-      menu.item(1, i, {title: homeName + ' vs ' + awayName, subtitle: millisToTime(z)});
+      //If nick not exist, create a temp one
+      if(matches[i].awayNick === ""){
+          matches[i].awayNick = matches[i].awayTeam.substring(0,6);
+          //console.log("away nick: " + matches[i].awayNick);
+      }
+      if(matches[i].homeNick === ""){
+          matches[i].homeNick = matches[i].homeTeam.substring(0,6);
+          //console.log("home nick: " + matches[i].homeNick);
+      }
+      menu.item(1, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: millisToTime(z)});
     }
 }
 
@@ -219,6 +231,15 @@ function createCompletedMenu(matches){
     menu.section(2, secCompleted);
     for(i in matches){
       //console.log(matches[i].tournament);
+      //If nick not exist, create a temp one
+      if(matches[i].awayNick === ""){
+          matches[i].awayNick = matches[i].awayTeam.substring(0,6);
+          //console.log("away nick: " + matches[i].awayNick);
+      }
+      if(matches[i].homeNick === ""){
+          matches[i].homeNick = matches[i].homeTeam.substring(0,6);
+          //console.log("home nick: " + matches[i].homeNick);
+      }
       menu.item(2, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + ' : ' + matches[i].awayScoreTotal});
     }
 }

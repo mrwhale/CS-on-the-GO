@@ -34,11 +34,12 @@
   "shortName": "CSontheGO",
   "targetPlatforms": [
     "aplite",
-    "basalt"
+    "basalt",
+    "diorite"
   ],
   "uuid": "5a4dc87b-bc0a-480d-aade-6dbf5da39e1c",
   "versionCode": 1,
-  "versionLabel": "0.8",
+  "versionLabel": "1.0",
   "watchapp": {
     "hiddenApp": false,
     "watchface": false

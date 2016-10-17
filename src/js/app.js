@@ -38,6 +38,8 @@ Pebble.addEventListener('showConfiguration', function(e) {
     reqConfig.open('GET', url);
     // Specify the callback for when the request is completed
     reqConfig.onload = function() {
+            var configCard = new UI.Card({
+             });
         if(reqConfig.readyState === 4 ){
             if(reqConfig.status === 200){
                 // The request was successfully completed!
@@ -48,9 +50,15 @@ Pebble.addEventListener('showConfiguration', function(e) {
                 Pebble.openURL(clay.generateUrl());
             }else{
                 console.log('Error in http');
+                configCard.title("Not successful");
+                configCard.body("Error fetching config page. Status " + reqConfig.statusText);
+                configCard.show();
             }
         }else{
             console.log('reqConfig state is error');
+            configCard.title("Not successful");
+            configCard.body("Error fetching config page. Status " + reqConfig.statusText);
+            configCard.show();
         }
     };
     // Send the request
@@ -133,6 +141,8 @@ function getCSGO(filter){
   req.open('GET', url);
   // Specify the callback for when the request is completed
   req.onload = function() {
+    var httpCard = new UI.Card({
+    });
     if(req.readyState === 4 ){
         if(req.status === 200){
             // The request was successfully completed!
@@ -148,9 +158,15 @@ function getCSGO(filter){
 
         }else{
             console.log('Error in http');
+            httpCard.title("Not successful");
+            httpCard.body("Error in fetching match results. HTTP Status: " + req.statusText);
+            httpCard.show();
         }
     }else{
-        console.log('req state is error');
+        console.log('req state is error' + req.responseText);
+        httpCard.title("Not successful");
+        httpCard.body("Error fetching match results. Status: " + req.readyState);
+        httpCard.show();
     }
   };
 
@@ -442,6 +458,9 @@ detect whta stage its in
        textHome.text(json.completedMatches[e.itemIndex].homeTeam);
        textAway.text(json.completedMatches[e.itemIndex].awayTeam);
        textTourn.text(json.completedMatches[e.itemIndex].tournament);
+       var timeTemp = json.completedMatches[e.itemIndex].timestamp * 1000;
+       var test = new Date(timeTemp);
+       console.log("date for completed match: " + test);
        var mapCount = json.completedMatches[e.itemIndex].maps.length;
        //lets find out how many maps there are, and create a card that fits that bill
        for(j = 0; j < mapCount;j++){
@@ -536,6 +555,15 @@ menu.on('longSelect',function(e){
     var datePin = new Date(timeMs).toISOString();
     console.log("date " + datePin);
     //Lets also create the body text here
+    if(json.upcomingMatches[e.itemIndex]['awayNick'] === ""){
+        json.upcomingMatches[e.itemIndex]['awayNick'] = json.upcomingMatches[e.itemIndex]['awayNick'].substring(0,6);
+        console.log("away nick: " + json.upcomingMatches[e.itemIndex]['awayNick']);
+    }
+    if(json.upcomingMatches[e.itemIndex]['homeNick'] === ""){
+        json.upcomingMatches[e.itemIndex]['homeNick'] = json.upcomingMatches[e.itemIndex]['homeNick'].substring(0,6);
+        console.log("home nick: " + json.upcomingMatches[e.itemIndex]['homeNick']);
+    }
+
     body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
     var PIN_ID = 'csonthego' + e.itemIndex + timeMs;
     var pin = {

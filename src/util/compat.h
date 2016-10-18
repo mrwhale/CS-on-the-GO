@@ -9,8 +9,7 @@
  */
 
 // Compatibility definitions for aplite on 2.9
-#if !defined(PBL_PLATFORM_APLITE) && !defined(PBL_PLATFORM_BASALT) && !defined(PBL_PLATFORM_CHALK)
-
+#if !defined(PBL_PLATFORM_APLITE) && !defined(PBL_PLATFORM_BASALT) && !defined(PBL_PLATFORM_CHALK) && !defined(PBL_PLATFORM_DIORITE) 
 #define PBL_SDK_2
 
 //! The format of a GBitmap can either be 1-bit or 8-bit.

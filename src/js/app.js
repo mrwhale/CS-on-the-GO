@@ -85,10 +85,10 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
   //menu.hide();
   if(isEnabled()){
-      makeSplash();
-      setTimeout(function(){
-          menu.hide();
-      }, 400)
+      //makeSplash();
+      //setTimeout(function(){
+       //   menu.hide();
+     // }, 400)
       
       //menu = new UI.Menu();
       //menu.remove(2);

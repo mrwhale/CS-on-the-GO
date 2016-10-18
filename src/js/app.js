@@ -17,7 +17,7 @@ var splashWindow = new UI.Window({ fullscreen: true});
 function makeSplash(){
     console.log("making splash");
     var splashImage = new UI.Image({
-        image: 'images/CSontheGO-inverted-splash2.png'
+        image: 'IMAGE_LOGO_CSGO_SPLASH'
     })
     splashWindow.add(splashImage);
     splashWindow.show();
@@ -33,7 +33,7 @@ Pebble.addEventListener('showConfiguration', function(e) {
     var reqConfig = new XMLHttpRequest();
     //console.log('watchtoken' + Pebble.getWatchToken());
     //todo PLEASE dont forget to change this. maybe I should make it variable at the top of the code so i dont have to change it once
-    var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + '/filterconfig';
+    var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + '/filterconfig';
     //console.log(url);
     reqConfig.open('GET', url);
     // Specify the callback for when the request is completed
@@ -129,9 +129,9 @@ function getCSGO(filter){
   if(filter === undefined){
       //filter not defined to no do anything
       //todo PLLLLLLEEEEASE dont forget to change this back to not staging when i go live
-      var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
+      var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken();
   }else{
-      var url = 'http://staging.pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + "/" + filter;
+      var url = 'http://pebble.mrwhal3.com/pebble/v1/' + Pebble.getWatchToken() + "/" + filter;
   }
   console.log('fetching csgo');
   var req = new XMLHttpRequest();
@@ -283,10 +283,17 @@ menu.on('select', function(e){
         position: new Vector2(0,0),
         size: new Vector2(144,20),
         backgroundColor: 'White',
-        color: 'Black',
+        color: 'black',
         font: 'gothic-18-bold',
         textOverflow: 'wrap',
         textAlign: 'center'
+    });
+    var textDate = new UI.Text({
+        position: new Vector2(0,20),
+        size: new Vector2(144,20),
+        backgroundColor: 'White',
+        color: 'black',
+        font: 'gothic-14'
     });
 /* Going to leave this out for now, maybe bring it in when i can somehow
 detect whta stage its in
@@ -301,14 +308,14 @@ detect whta stage its in
 
    //Lets create some UI elements to display the cards
     var line = new UI.Line({
-        position: new Vector2(71, 20),
-        position2: new Vector2(71, 65),
+        position: new Vector2(71, 40),
+        position2: new Vector2(71, 85),
         strokeColor: 'black',
         strokeWidth: 2
     });
 
     var textHome = new UI.Text({
-        position: new Vector2(0, 20),
+        position: new Vector2(0, 40),
         size: new Vector2(71, 30),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -318,7 +325,7 @@ detect whta stage its in
     });
 
     var textAway = new UI.Text({
-        position: new Vector2(73, 20),
+        position: new Vector2(73, 40),
         size: new Vector2(71, 30),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -329,7 +336,7 @@ detect whta stage its in
     });
 
     var textHomeScore = new UI.Text({
-        position: new Vector2(0, 50),
+        position: new Vector2(0, 70),
         size: new Vector2(71, 15),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -339,7 +346,7 @@ detect whta stage its in
         });
 
     var textAwayScore = new UI.Text({
-        position: new Vector2(73, 50),
+        position: new Vector2(73, 70),
         size: new Vector2(71, 15),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -349,7 +356,7 @@ detect whta stage its in
      });
 
     var textMap0 = new UI.Text({
-        position: new Vector2(0, 65),
+        position: new Vector2(0, 85),
         size: new Vector2(144, 20),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -359,7 +366,7 @@ detect whta stage its in
         textOverflow: 'wrap'
     });
     var textMapScoreHome0 = new UI.Text({
-        position: new Vector2(0, 85),
+        position: new Vector2(0, 105),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -369,7 +376,7 @@ detect whta stage its in
         textOverflow: 'wrap'
     });
     var textMapScoreAway0 = new UI.Text({
-        position: new Vector2(73, 85),
+        position: new Vector2(73, 105),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -379,7 +386,7 @@ detect whta stage its in
         textOverflow: 'wrap'
     });
     var textMap1 = new UI.Text({
-        position: new Vector2(0, 103),
+        position: new Vector2(0, 123),
         size: new Vector2(144, 20),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -389,7 +396,7 @@ detect whta stage its in
         textOverflow: 'wrap'
         });
     var textMapScoreHome1 = new UI.Text({
-        position: new Vector2(0, 123),
+        position: new Vector2(0, 143),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -399,7 +406,7 @@ detect whta stage its in
         textOverflow: 'wrap'
          });
     var textMapScoreAway1 = new UI.Text({
-        position: new Vector2(73, 123),
+        position: new Vector2(73, 143),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -409,7 +416,7 @@ detect whta stage its in
         textOverflow: 'wrap'
         });
     var textMap2 = new UI.Text({
-        position: new Vector2(0, 141),
+        position: new Vector2(0, 161),
         size: new Vector2(144, 20),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -419,7 +426,7 @@ detect whta stage its in
         textOverflow: 'wrap'
         });
     var textMapScoreHome2 = new UI.Text({
-        position: new Vector2(0, 161),
+        position: new Vector2(0, 181),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -429,7 +436,7 @@ detect whta stage its in
         textOverflow: 'wrap'
         });
     var textMapScoreAway2 = new UI.Text({
-        position: new Vector2(73, 161),
+        position: new Vector2(73, 181),
         size: new Vector2(71, 18),
         borderColor: 'white',
         backgroundColor: 'white',
@@ -438,7 +445,8 @@ detect whta stage its in
         textAlign: 'center',
         textOverflow: 'wrap'
         });
-
+    var timeTemp = json.completedMatches[e.itemIndex].timestamp * 1000;
+    var test = new Date(timeTemp);
 //If section is in the upcoming area
    if(e.sectionIndex === 0){
        var array = 'liveMatches';
@@ -458,11 +466,13 @@ detect whta stage its in
        textHome.text(json.completedMatches[e.itemIndex].homeTeam);
        textAway.text(json.completedMatches[e.itemIndex].awayTeam);
        textTourn.text(json.completedMatches[e.itemIndex].tournament);
-       var timeTemp = json.completedMatches[e.itemIndex].timestamp * 1000;
-       var test = new Date(timeTemp);
-       console.log("date for completed match: " + test);
+       var h = test.getHours();
+       var m = test.getMinutes();
+       console.log("date for completed match: " + test.toDateString() + " " + (h<=9 ? '0' + h : h) + ":" + (m<=9 ? '0' + m : m))
+       textDate.text(test.toDateString() + " " + (h<=9 ? '0' + h : h) + ":" + (m<=9 ? '0' + m : m));
        var mapCount = json.completedMatches[e.itemIndex].maps.length;
        //lets find out how many maps there are, and create a card that fits that bill
+       console.log("map cpunt: " + mapCount);
        for(j = 0; j < mapCount;j++){
            if(j === 0){
                if(mapCount == 1){
@@ -476,8 +486,8 @@ detect whta stage its in
                     textMapScoreHome0.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
                     textMapScoreAway0.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
                     var line2 = new UI.Line({
-                        position: new Vector2(71, 85),
-                        position2: new Vector2(71, 103),
+                        position: new Vector2(71, 105),
+                        position2: new Vector2(71, 123),
                         strokeColor: 'black',
                         strokeWidth: 2
                     });
@@ -488,12 +498,13 @@ detect whta stage its in
                }
            }else if(j === 1){
                //add to map1
+               console.log("j is 1");
                textMap1.text(json.completedMatches[e.itemIndex].maps[j].mapName);
                textMapScoreHome1.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
                textMapScoreAway1.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
                var line3 = new UI.Line({
-                        position: new Vector2(71, 123),
-                        position2: new Vector2(71, 138),
+                        position: new Vector2(71, 143),
+                        position2: new Vector2(71, 161),
                         strokeColor: 'black',
                         strokeWidth: 2
                });
@@ -502,13 +513,14 @@ detect whta stage its in
                wind.add(textMapScoreHome1);
                wind.add(textMapScoreAway1);
            }else if(j === 2){
+               console.log("j is 2");
                //add to map1
                textMap2.text(json.completedMatches[e.itemIndex].maps[j].mapName);
                textMapScoreHome2.text(json.completedMatches[e.itemIndex].maps[j].homeScore);
                textMapScoreAway2.text(json.completedMatches[e.itemIndex].maps[j].awayScore);
                var line4 = new UI.Line({
-                        position: new Vector2(71, 161),
-                        position2: new Vector2(71, 179),
+                        position: new Vector2(71, 181),
+                        position2: new Vector2(71, 199),
                         strokeColor: 'black',
                         strokeWidth: 2
                });
@@ -529,6 +541,7 @@ detect whta stage its in
    //card.add(line);
     //card.show();
     wind.add(textTourn);
+    wind.add(textDate);
     wind.add(line);
    // wind.add(textStage);
     wind.add(textHome);

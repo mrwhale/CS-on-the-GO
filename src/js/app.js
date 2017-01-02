@@ -4,13 +4,14 @@ var Settings = require('settings');
 var timeline = require('./timeline2.js');
 //var PIN_ID = "CSontheGOTest";
 
-//todo display messages on errors when cant load etc
 // Hysuo65lk
 
 var Clay = require('clay');
 //var clayConfig = require('config2.json');
 var clayConfig = "";
 var clay = "";
+//adding new menu. display tournaments first
+var menuTourn = new UI.Menu();
 var menu = new UI.Menu();
 var splashWindow = new UI.Window({ fullscreen: true});
 
@@ -119,7 +120,6 @@ if(isEnabled()){
     getCSGO();
 }
 
-//todo extend this to be able to handle the filter options too
 /*
  * Function is used to get the json feed from the datastore
  * Maybe make this require URL as input, would make it more friendly to change
@@ -186,6 +186,16 @@ function isEnabled(){
     }
 }
 
+function createTournamentMenu(tournaments){
+    var items = [];
+    // todo need to get live count for each tournament during the loop. maybe make backend do all the work?
+    var tCount = 3;
+    var secTourn = { title: 'Tournaments' };
+    menuTourn.section(0, secTourn);
+    for(i in tournaments){
+      menu.item(0, i, {title: tournaments[i].name, subtitle: count here});
+    }
+}
 /*
  * Function to create the Live Matches part of the menu
  * Takes a json object as input, and draws up its own section in the menu
@@ -605,7 +615,6 @@ menu.on('longSelect',function(e){
         console.log('Result: ' + responseText);
         if(responseText === "OK"){
             pinCard.body("Successfully added pin!");
-            //todo lets buzz or do an onscreen notification!
             //Add a card with successfully added notification and hide in 3s
             setTimeout(function() {
                 pinCard.hide();
@@ -622,7 +631,8 @@ menu.on('longSelect',function(e){
 
 function amReady(){
     splashWindow.hide()
-    menu.show();
+    menuTourn.show();
+    //menu.show();
 }
 
 function millisToTime(ms) {

@@ -8,13 +8,13 @@
   "resources": {
     "media": [
       {
-        "file": "images/CSontheGO-inverted-icon.png",
+        "file": "images/25x25.png",
         "menuIcon": true,
         "name": "IMAGE_MENU_ICON",
         "type": "bitmap"
       },
       {
-        "file": "images/CSontheGO-inverted-splash2.png",
+        "file": "images/144x144.png",
         "name": "IMAGE_LOGO_CSGO_SPLASH",
         "type": "bitmap"
       },
@@ -39,7 +39,7 @@
   ],
   "uuid": "5a4dc87b-bc0a-480d-aade-6dbf5da39e1c",
   "versionCode": 1,
-  "versionLabel": "1.0",
+  "versionLabel": "1.1",
   "watchapp": {
     "hiddenApp": false,
     "watchface": false

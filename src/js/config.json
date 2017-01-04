@@ -1,0 +1,153 @@
+/*[
+ {
+    "type": "heading",
+    "defaultValue": "Filter your CSGO"
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "toggle",
+        "appKey": "enabled",
+        "defaultValue": false,
+        "label": "Enable Filter"
+      },
+      {
+        "type": "checkboxgroup",
+        "appKey": "teams",
+        "label": "Select Teams",
+        "options": [{
+          "label": "Navi",
+          "value":"0"
+        },
+        {
+          "label": "VP",
+          "value":"1"
+        },
+        {
+          "label": "EnVYus",
+          "value":"2"
+        }
+      ]},{
+        "type": "checkboxgroup",
+        "appKey": "Tournaments",
+        "label": "Select Tournaments",
+        "options": [{
+          "label": "ESEA ESL",
+          "value":"0"
+        },
+        {
+          "label": "DreamHack malamo",
+          "value":"1"
+        },
+        {
+          "label": "That other one",
+          "value":"2"
+        }
+        ]
+      },
+      {
+        "type":"checkboxgroup",
+        "appKey":"status",
+        "label": "Match status",
+        "defaultValue": [0,1,2],
+        "options":[
+          {
+          "label":"Upcoming",
+          "value":1
+        },
+        {
+          "label":"Live",
+          "value":0
+        },
+        {
+          "label":"Completed",
+          "value":2
+        }
+        ]
+      },
+      {
+        "type": "slider",
+        "appKey": "liveNumber",
+        "defaultValue": 5,
+        "label": "Live Matches",
+        "min":0,
+        "max": 10
+      },
+      {
+        "type": "slider",
+        "appKey": "upcomingNumber",
+        "defaultValue": 5,
+        "label": "Upcoming Matches",
+        "min":0,
+        "max": 10
+      },
+      {
+        "type": "slider",
+        "appKey": "completedNumber",
+        "defaultValue": 10,
+        "label": "Completed Matches",
+        "min":0,
+        "max": 15
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save Settings"
+  }
+]
+*/
+/*
+[
+  {"type":"heading","defaultValue":"Filter your CSGO"},
+  {
+    "type":"section",
+    "items":[
+      {"type":"toggle","appKey":"enabled","defaultValue":"false","label":"Enable Filter"},
+      {"type":"checkboxgroup","appkey":"teams","label":"Select Teams","options":[{"label":"MK.","value":"1"},{"label":"Team X.","value":"2"},{"label":"Team EnVyUs","value":"3"},{"label":"HellRaisers","value":"4"},{"label":"Fruits","value":"5"},{"label":"Team Kinguin","value":"6"}]
+  }
+  ]
+  },
+  
+  {
+    "type":"submit",
+  "defaultValue":"Save Settings"
+  }
+  ]*/
+[
+  {
+      "type":"heading",
+      "defaultValue":"Filter your CSGO"
+  },
+  {
+    "type":"section",
+    "items":[
+      {
+          "type":"toggle",
+          "appKey":"enabled",
+          "defaultValue":"false",
+          "label":"Enable Filter"
+      },
+      {
+          "type":"checkboxgroup",
+          "appKey":"teams",
+          "label":"Select Teams",
+          "options":
+          [{
+              "label":"MK.",
+              "value":"0"
+              },
+              {"label":"Team X.",
+              "value":"1"
+              },
+              {
+                  "label":"Team EnVyUs",
+                  "value":"2"}
+    ]}]},
+  
+  {
+    "type":"submit",
+  "defaultValue":"Save Settings"
+  }
+  ]

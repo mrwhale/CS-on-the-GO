@@ -206,7 +206,14 @@ function createLiveMenu(matches){
           console.log("home nick: " + matches[i].homeNick);
       }
       //console.log(matches[i].tournament);
-      menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament});
+	//If not scores then display the tournament as the subtitle 
+	if(matches.[i].homeScore === null || matches.[i].awayScore === null){ 
+		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament}); 
+	}else{ 
+		//Else we display the scores in the subtitle 
+		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].homeScore + ' - ' + matches[i].awayScore});
+	} 
+								       
     }
 }
 
@@ -285,7 +292,7 @@ menu.on('select', function(e){
         backgroundColor: 'White',
         color: 'black',
         font: 'gothic-18-bold',
-        textOverflow: 'wrap',
+        textOverflow: 'ellipsis',
         textAlign: 'center'
     });
     var textDate = new UI.Text({

@@ -2,16 +2,24 @@ var UI = require('ui');
 var Vector2 = require('vector2');
 var Settings = require('settings');
 var timeline = require('./timeline2.js');
+var Feature = require('platform/feature');
 //var PIN_ID = "CSontheGOTest";
 
 //todo display messages on errors when cant load etc
 // Hysuo65lk
-
+var bGcolor = Feature.color("white", "white");
+var highlightcolor = Feature.color("VividCerulean", "black");
+var highlighttextcolor = Feature.color("black", "white");
 var Clay = require('clay');
 //var clayConfig = require('config2.json');
 var clayConfig = "";
 var clay = "";
-var menu = new UI.Menu();
+
+var menu = new UI.Menu({
+    backgroundColor: bGcolor,
+    highlightBackgroundColor: highlightcolor,
+    highlightTextColor: highlighttextcolor
+});
 var splashWindow = new UI.Window({ fullscreen: true});
 
 function makeSplash(){

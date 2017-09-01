@@ -215,7 +215,7 @@ function createLiveMenu(matches){
       }
       //console.log(matches[i].tournament);
 	//If not scores then display the tournament as the subtitle 
-	if(matches.[i].homeScore === null || matches.[i].awayScore === null){ 
+	if(matches[i].homeScore === null || matches[i].awayScore === null){ 
 		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament}); 
 	}else{ 
 		//Else we display the scores in the subtitle 
@@ -574,7 +574,9 @@ menu.on('longSelect',function(e){
         return;
     }
     var pinCard = new UI.Card({
-            body: 'Adding Pin...'
+            body: 'Adding Pin...',
+            style: 'large',
+            title: 'CSontheGO'
     });
     pinCard.show()
     //create pin
@@ -592,7 +594,7 @@ menu.on('longSelect',function(e){
         console.log("home nick: " + json.upcomingMatches[e.itemIndex]['homeNick']);
     }
 
-    body = json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'] + "\n" + json.upcomingMatches[e.itemIndex]['tournament'];
+    body = json.upcomingMatches[e.itemIndex]['tournament'] + "\n" + json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'];
     var PIN_ID = 'csonthego' + e.itemIndex + timeMs;
     var pin = {
         'id': PIN_ID,
@@ -601,7 +603,8 @@ menu.on('longSelect',function(e){
             'type': 'genericPin',
             'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'],
             'body': body,
-            'tinyIcon': 'system://images/SCHEDULED_EVENT'
+            'tinyIcon': 'system://images/SCHEDULED_EVENT',
+            'backgroundColor': 'VividCerulean'
         },
         "reminders": [
         {

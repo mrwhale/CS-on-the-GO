@@ -215,7 +215,8 @@ function createLiveMenu(matches){
       }
       //console.log(matches[i].tournament);
 	//If not scores then display the tournament as the subtitle 
-	if(matches[i].homeScore === null || matches[i].awayScore === null){ 
+	if(matches[i].homeScore == null || matches[i].awayScore == null){ 
+		console.log("live scores not there lets display tournament")
 		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament}); 
 	}else{ 
 		//Else we display the scores in the subtitle 

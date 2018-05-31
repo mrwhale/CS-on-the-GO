@@ -30,6 +30,15 @@ function makeSplash(){
     splashWindow.add(splashImage);
     splashWindow.show();
 }
+//Main seciton start
+makeSplash();
+if(isEnabled()){
+    var options = Settings.option();
+    console.log(JSON.stringify(options));
+    getCSGO(JSON.stringify(options))
+}else{
+    getCSGO();
+}
 
 //Create a new UI
 //turns out you cant change font in a pebblejs menu list :(
@@ -117,15 +126,6 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS ready!');
 });
 
-//Main seciton start
-makeSplash();
-if(isEnabled()){
-    var options = Settings.option();
-    console.log(JSON.stringify(options));
-    getCSGO(JSON.stringify(options))
-}else{
-    getCSGO();
-}
 
 //todo extend this to be able to handle the filter options too
 /*
@@ -217,10 +217,10 @@ function createLiveMenu(matches){
 	//If not scores then display the tournament as the subtitle 
 	if(matches[i].homeScore == null || matches[i].awayScore == null){ 
 		console.log("live scores not there lets display tournament")
-		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].tournament}); 
+		menu.item(0, i, {title: matches[i].homeNick + ' : ' + matches[i].awayNick, subtitle: matches[i].tournament}); 
 	}else{ 
 		//Else we display the scores in the subtitle 
-		menu.item(0, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].homeScore + ' - ' + matches[i].awayScore});
+		menu.item(0, i, {title: matches[i].homeNick + ' : ' + matches[i].awayNick, subtitle: matches[i].homeScore + ' - ' + matches[i].awayScore});
 	} 
 								       
     }
@@ -249,7 +249,7 @@ function createUpcomingMenu(matches){
           matches[i].homeNick = matches[i].homeTeam.substring(0,6);
           //console.log("home nick: " + matches[i].homeNick);
       }
-      menu.item(1, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: millisToTime(z)});
+      menu.item(1, i, {title: matches[i].homeNick + ' : ' + matches[i].awayNick, subtitle: millisToTime(z)});
     }
 }
 
@@ -272,7 +272,7 @@ function createCompletedMenu(matches){
           matches[i].homeNick = matches[i].homeTeam.substring(0,6);
           //console.log("home nick: " + matches[i].homeNick);
       }
-      menu.item(2, i, {title: matches[i].homeNick + ' vs ' + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + ' : ' + matches[i].awayScoreTotal});
+      menu.item(2, i, {title: matches[i].homeNick + ' : ' + matches[i].awayNick, subtitle: matches[i].homeScoreTotal + ' : ' + matches[i].awayScoreTotal});
     }
 }
 
@@ -301,7 +301,7 @@ menu.on('select', function(e){
         backgroundColor: 'White',
         color: 'black',
         font: 'gothic-18-bold',
-        textOverflow: 'ellipsis',
+        textOverflow: 'fill',
         textAlign: 'center'
     });
     var textDate = new UI.Text({
@@ -595,14 +595,14 @@ menu.on('longSelect',function(e){
         console.log("home nick: " + json.upcomingMatches[e.itemIndex]['homeNick']);
     }
 
-    body = json.upcomingMatches[e.itemIndex]['tournament'] + "\n" + json.upcomingMatches[e.itemIndex]['homeTeam'] + " vs " + json.upcomingMatches[e.itemIndex]['awayTeam'];
+    body = json.upcomingMatches[e.itemIndex]['tournament'] + "\n" + json.upcomingMatches[e.itemIndex]['homeTeam'] + " : " + json.upcomingMatches[e.itemIndex]['awayTeam'];
     var PIN_ID = 'csonthego' + e.itemIndex + timeMs;
     var pin = {
         'id': PIN_ID,
         'time': datePin,
         'layout': {
             'type': 'genericPin',
-            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'],
+            'title': json.upcomingMatches[e.itemIndex]['homeNick'] + " : " + json.upcomingMatches[e.itemIndex]['awayNick'],
             'body': body,
             'tinyIcon': 'system://images/SCHEDULED_EVENT',
             'backgroundColor': 'VividCerulean'
@@ -613,7 +613,7 @@ menu.on('longSelect',function(e){
             "layout": {
                  "type": "genericReminder",
                  "tinyIcon": 'system://images/SCHEDULED_EVENT',
-                 "title": json.upcomingMatches[e.itemIndex]['homeNick'] + " vs " + json.upcomingMatches[e.itemIndex]['awayNick'] + " match is starting.."
+                 "title": "Matchup between " + json.upcomingMatches[e.itemIndex]['homeNick'] + " : " + json.upcomingMatches[e.itemIndex]['awayNick'] + " begining"
             }
          }]
     };
@@ -654,11 +654,11 @@ function millisToTime(ms) {
     x /= 24;
     var days = Math.floor(x);
     if (days == '' && hours == '') {
-        return minutes + ' Minutes, '  + seconds + ' Seconds';
+        return minutes + ' mins'
     } else if (days == '') {
-        return  hours + ' Hours, ' + minutes + ' Minutes';
+        return  hours + ' hrs, ' + minutes + ' mins';
     } else {
-        return  days + ' Days, ' + hours + ' Hours, ' + minutes + ' Minutes';
+        return  days + ' Days, ' + hours + ' hrs'
     }
 
 }
